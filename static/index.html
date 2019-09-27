@@ -1,0 +1,23 @@
+<HTML>
+
+<head>
+    <script>
+        function myFunction() {
+            const Http = new XMLHttpRequest();
+            const url='api/temp';
+            Http.open("GET", url);
+            Http.send();
+
+            Http.onreadystatechange = (e) => {
+              console.log(Http.responseText)
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <h1> Hello world </h1>
+    <button onclick="myFunction()">Click me</button>
+</body>
+
+</HTML>
