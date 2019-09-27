@@ -2,6 +2,7 @@ from os.path import join, dirname, realpath
 from flask import Flask, send_from_directory
 
 app = Flask(__name__, static_url_path="")
+static_file_dir = join(dirname(realpath(__file__)), "static")
 
 
 @app.route("/")
