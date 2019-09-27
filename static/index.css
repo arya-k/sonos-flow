@@ -1,8 +1,27 @@
 body {
-    background-color: white;
+    background-color: #d8d8d8;
 }
 
 .top-panel {
-    background-color: bisque;
     text-align: center;
+    padding: 15px;
 }
+
+h1 {
+    font-family: 'aktiv grotest light';
+}
+
+@font-face {
+    font-family: 'Sonos';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Futura Hv BT Heavy'), url('fonts/futurah.woff') format('woff');
+}
+
+@font-face {
+    font-family: 'aktiv grotesk light';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Futura Hv BT Heavy'), url('fonts/AktivGrotesk-light.ttf') format('truetype');
+}
+    
