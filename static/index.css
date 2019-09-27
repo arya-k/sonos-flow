@@ -1,3 +1,8 @@
-.big-container {
+body {
+    background-color: white;
+}
+
+.top-panel {
     background-color: bisque;
+    text-align: center;
 }
