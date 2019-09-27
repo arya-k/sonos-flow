@@ -1,13 +1,17 @@
 from os.path import join, dirname, realpath
 from flask import Flask, send_from_directory
 
-app = Flask(__name__)
-static_file_dir = join(dirname(realpath(__file__)), "static")
+app = Flask(__name__, static_url_path="")
 
 
 @app.route("/")
 def main_page():
     return send_from_directory(static_file_dir, "index.html")
+
+
+@app.route("/static/<path:path>")
+def send_statics(path):
+    return send_from_directory("static", path)
 
 
 @app.route("/api/temp")
