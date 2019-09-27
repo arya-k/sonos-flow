@@ -1,5 +1,19 @@
+
+/*################ CONTENT STYLE ##################*/
 body {
     background-color: #d8d8d8;
+}
+
+#content {
+    margin: 0 auto;
+    padding-bottom: 50px;
+    width: 80%;
+    max-width: 978px;;
+}
+
+.top-panel {
+    text-align: center;
+    padding: 15px;
 }
 
 .top-panel {
@@ -8,9 +22,51 @@ body {
 }
 
 h1 {
-    font-family: 'aktiv grotest light';
+    font-family: 'HelveticaNeueMedium';
 }
 
+/*#################  LOADER STYLE  #####################*/
+#loader-content { 
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+}
+
+#loader-slides {
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+
+#load-first {
+    background: rgb(242, 216, 215);
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    padding-top: 95% !important;
+}
+#load-second {
+    background: rgb(28, 95, 74);;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    padding-top: 95% !important;
+}
+#load-third {
+    background: rgb(189, 210, 231);
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    padding-top: 95% !important;
+}
+
+
+/*#################  FONTS  #####################*/
 @font-face {
     font-family: 'Sonos';
     font-style: normal;
@@ -19,9 +75,16 @@ h1 {
 }
 
 @font-face {
-    font-family: 'aktiv grotesk light';
+    font-family: 'HelveticaNeueMedium';
     font-style: normal;
     font-weight: normal;
-    src: local('Futura Hv BT Heavy'), url('fonts/AktivGrotesk-light.ttf') format('truetype');
+    src: local('Helvetica Neue Medium'), url('fonts/HelveticaNeueMedium.woff') format('woff');
+}
+
+@font-face {
+    font-family: 'aktiv grotesk regular';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Futura Hv BT Heavy'), url('fonts/AktivGrotesk-regular.ttf') format('truetype');
 }
     

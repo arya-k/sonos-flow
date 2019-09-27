@@ -5,23 +5,44 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link href="https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
-    <link href="static/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
-    <link rel="stylesheet" href="static/index.css">
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <link rel="stylesheet" href="index.css">
 
     
 </head>
 
 <body>
-    <header class="top-panel">
-        <img class="img-fluid" src="static/images/logo.png" alt="Sonos Flow"> 
-    </header>
-    <div class="container">
-        <h1> Hello world </h1>
-        <button class="btn btn-primary" onclick="myFunction()">Click me</button></div>
+    <div id="loader-content">
+            <div id="loader-slides" class="carousel slide" data-ride="carousel" data-interval="1500">
+                <div class="carousel-inner" style="height: 100%">
+                    <div id="load-first" class="carousel-item active">
+                        <img class="img-fluid d-block w-100" src="static/images/logo.png" alt="Sonos Flow"> 
+                    </div>
+                    <div id="load-second" class="carousel-item">
+                        <img class="img-fluid d-block w-100" src="static/images/logo.png" alt="Sonos Flow">
+                    </div>
+                    <div id="load-third" class="carousel-item">
+                        <img class="img-fluid d-block w-100" src="static/images/logo.png" alt="Sonos Flow">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <div id="content">
+        <header class="top-panel">
+            <img class="img-fluid" src="static/images/logo.png" alt="Sonos Flow"> 
+       </header>
+        <div class="container">
+            <h1>Welcome</h1>
+            <button class="btn btn-primary" onclick="myFunction()">Click me</button>
+        </div>
+    </div>
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
 
     <script>
             function myFunction() {
