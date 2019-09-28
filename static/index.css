@@ -30,6 +30,11 @@ h1 {
     display: none;
 }
 
+.loader {
+    width: 100%;
+    height: 100%;
+}
+
 #loader-content { 
     position: fixed;
     top: 0;
@@ -38,35 +43,44 @@ h1 {
     z-index: 1000;
 }
 
-#loader-slides {
-    top: 0;
+#loader-background {
+    background: black;
     width: 100%;
     height: 100%;
+    padding: 20%;
+    padding-top: 95%;
 }
 
-#load-first {
-    background: rgb(242, 216, 215) ;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1000;
-    padding-top: 95% !important;
+#loader-flow {
+    position: relative;
+    z-index: 1100;
+    padding: 1% 30% 0% 45%;
+    right: -10%;
+    animation: slide 1.2s forwards;
+    animation-delay: 1s;
 }
-#load-second {
-    background: rgb(28, 95, 74);;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1000;
-    padding-top: 95% !important;
+
+@keyframes slide {
+    0% { top: -30% }
+    100% {top: -50% }
 }
-#load-third {
-    background: rgb(189, 210, 231);
-    top: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1000;
-    padding-top: 95% !important;
+
+.fade-in {
+	opacity: 1;
+	animation-name: fadeInOpacity;
+	animation-iteration-count: 1;
+	animation-timing-function: ease-in;
+    animation-duration: 1.2s;
+    animation-delay: 1s;
+}
+
+@keyframes fadeInOpacity {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
 }
 
 
