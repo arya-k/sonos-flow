@@ -26,6 +26,10 @@ h1 {
 }
 
 /*#################  LOADER STYLE  #####################*/
+.loaded {
+    display: none;
+}
+
 #loader-content { 
     position: fixed;
     top: 0;
@@ -41,7 +45,7 @@ h1 {
 }
 
 #load-first {
-    background: rgb(242, 216, 215);
+    background: rgb(242, 216, 215) ;
     top: 0;
     width: 100%;
     height: 100%;
