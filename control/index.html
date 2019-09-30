@@ -1,0 +1,52 @@
+<HTML>
+    <head>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        <style>
+            h1 {
+                text-align: center;
+                font-size: 10rem; 
+                font-variant:small-caps;
+            }
+            .btn-xl {
+                padding: 80% 0;
+                font-size: 5rem;
+            }
+        </style>
+        <script>
+            function scene1() {
+                var xmlHttp = new XMLHttpRequest();
+                xmlHttp.open( "GET", "http://AryasMacbook:3000/api/scene1", false ); // false for synchronous request
+                xmlHttp.send( null );
+            }
+
+            function scene2() {
+                var xmlHttp = new XMLHttpRequest();
+                xmlHttp.open( "GET", "http://AryasMacbook:3000/api/scene2", false ); // false for synchronous request
+                xmlHttp.send( null );
+            }
+
+            function scene3() {
+                var xmlHttp = new XMLHttpRequest();
+                xmlHttp.open( "GET", "http://AryasMacbook:3000/api/scene3", false ); // false for synchronous request
+                xmlHttp.send( null );
+            }
+        </script>
+    </head>
+        <!-- To do: custom font -->
+    <body>
+        <h1>Sonos Flow</h1>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm">
+                    <button type="button" class="btn btn-primary btn-block btn-xl" onclick="scene1()">Scene #1</button>
+                </div>
+                <div class="col-sm">
+                    <button type="button" class="btn btn-primary btn-block btn-xl" onclick="scene2()">Scene #2</button>
+                </div>
+                <div class="col-sm">
+                    <button type="button" class="btn btn-primary btn-block btn-xl" onclick="scene3()">Scene #3</button>
+                </div>
+            </div>
+        </div>
+    </body>
+</HTML>
