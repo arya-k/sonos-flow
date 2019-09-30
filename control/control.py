@@ -11,18 +11,17 @@ def main_page():
     return send_from_directory(static_file_dir, "index.html")
 
 
-# Serving Files
-@app.route("/music/connected.mp3")
-def connected_music():
-    return send_from_directory(static_file_dir, "connected.mp3")
+# Serve mp3 files.
+@app.route("/music/<music_name>.mp3")
+def serve_music(music_name):
+    return send_from_directory(static_file_dir, "{}.mp3".format(music_name))
 
 
-@app.route("/music/disconnected.mp3")
-def disconnected_music():
-    return send_from_directory(static_file_dir, "disconnected.mp3")
+#################
+# API ENDPOINTS #
+#################
 
 
-# API Endpoints
 @app.route("/api/<room>/pause")
 def pause(room):
     if room in g:
@@ -52,14 +51,15 @@ def disconnected(room):
 
 
 if __name__ == "__main__":
+    TESTING_MODE = True
 
-    # discover all the speakers:
-    speakers = soco.discover()
-    if speakers is not None:
-        g = {z.player_name: z for z in speakers}
-    else:
-        print("No speakers found.")
+    # discover all the speaker zones:
+    if TESTING_MODE:
         print("You are in testing mode.")
+    else:
+        speakers = soco.discover()
+        assert speakers is not None, "Error: no speakers found."
+        g = {z.player_name: z for z in speakers}
 
     # run the main flask app:
     app.run(host="0.0.0.0", port=3000, debug=True)
