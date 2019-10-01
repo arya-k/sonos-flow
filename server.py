@@ -17,8 +17,8 @@ def send_statics(path):
 
 @app.route("/api/temp")
 def temp_api():
-    g["val"] = g.get("val", 0) + 1
-    return "VAL is at {}".format(g["val"])
+    g["Room"] = g.get("Room", 0)
+    return "Room set to {}".format(g["Room"])
 
 
 @app.route("/api/beep/<speaker_id>")

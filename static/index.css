@@ -1,13 +1,12 @@
 
 /*################ CONTENT STYLE ##################*/
 body {
-    background-color: #d8d8d8;
+    background-color: white;
+    height: 812px;
 }
 
 #content {
     margin: 0 auto;
-    padding-bottom: 50px;
-    width: 80%;
     max-width: 978px;;
 }
 
@@ -17,12 +16,98 @@ body {
 }
 
 .top-panel {
-    text-align: center;
+    /* text-align: center; */
     padding: 15px;
 }
 
-h1 {
+#rooms-tab {
+    display: inline-block;
+    margin-left: 75px;
+}
+
+#pause-all {
+    /* display: inline-block; */
+    float: right;
+    line-height: 1.7;
+    color: rgb(206, 206, 206)
+}
+
+h1.h3s {
     font-family: 'HelveticaNeueMedium';
+}
+
+.room {
+    border: 1px solid black !important;
+    border-radius: 10px;
+    margin: 20px 25px 10px 25px;
+    vertical-align: middle;
+}
+
+.room-header {
+    display: inline-flex;
+    padding: 10px 10px 0px 10px;
+}
+
+.room-title {
+    padding-left: 10px;
+    display: inline-block;
+    line-height: 2.5;
+}
+
+.group {
+    margin-left: 160px;
+}
+
+.music-container {
+    padding: 0 20px 0px 20px;
+    display: flex;
+    font-size: 12px;
+}
+
+.music-info-container {
+    margin-left: 15px;
+    color: gray;
+}
+
+.listeners-container {
+    display: flex;
+    padding: 5px 20px 20px 20px;
+}
+
+.title-listeners {
+    margin-right: 43px;
+    font-weight: 500;
+}
+
+.listeners {
+    font-style: italic;
+}
+
+.join-in {
+    border: 1px solid rgb(245, 245, 245) !important;
+    border-radius: 7px;
+    background-color: rgb(245, 245, 245);
+    margin-left: 5px;
+    padding: 0 5px 0 5px;
+    font-weight: 650;
+}
+
+.bottom-nav {
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+    bottom: 0px;
+    position: fixed;   
+    height: 100px;
+    background: black;
+}
+
+.nav-buttons {
+    height: 72%;
+}
+
+.nav-item {
+    display: inline-block;
 }
 
 /*#################  LOADER STYLE  #####################*/
@@ -38,9 +123,12 @@ h1 {
 #loader-content { 
     position: fixed;
     top: 0;
-    width: 100%;
-    height: 100%;
+    width: 100% !important;
+    height: 100% !important;
     z-index: 1000;
+    /* opacity: 1;
+    animation: fadeOutOpacity 1s ease-out;
+    animation-delay: 3.5s; */
 }
 
 #loader-background {
@@ -60,9 +148,13 @@ h1 {
     animation-delay: 1s;
 }
 
-@keyframes slide {
-    0% { top: -30% }
-    100% {top: -50% }
+.sonos {
+	opacity: 1;
+	animation-name: fadeInOpacity;
+	animation-iteration-count: 1;
+	animation-timing-function: ease-in;
+    animation-duration: 1.2s;
+    animation-delay: 0s;
 }
 
 .fade-in {
@@ -75,12 +167,18 @@ h1 {
 }
 
 @keyframes fadeInOpacity {
-	0% {
-		opacity: 0;
-	}
-	100% {
-		opacity: 1;
-	}
+	0% { opacity: 0; }
+	100% { opacity: 1; }
+}
+
+@keyframes fadeOutOpacity {
+	0% { opacity: 1; }
+	100% { opacity: 0; }
+}
+
+@keyframes slide {
+    0% { top: -30% }
+    100% {top: -50% }
 }
 
 
@@ -105,4 +203,29 @@ h1 {
     font-weight: normal;
     src: local('Futura Hv BT Heavy'), url('fonts/AktivGrotesk-regular.ttf') format('truetype');
 }
-    
+
+/*################ IMAGES ###################*/
+.nav-background {
+  background: url("/images/footer.png") no-repeat center center;
+  background-size: 103% 80%;
+}
+
+.group-icon {
+    background: url("/images/group.png") no-repeat center center;
+    background-size: 93% 85%;
+    float: right;
+    height: 40px;
+    width: 80px;
+  }
+
+.cover {
+    background: url("/images/song-cover.png") no-repeat center center;
+    background-size: 100% 100%;
+    width: 36px;
+}
+
+.cover-hp {
+    background: url("/images/song-cover-hp.png") no-repeat center center;
+    background-size: 100% 100%;
+    width: 36px;
+}

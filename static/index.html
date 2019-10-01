@@ -17,7 +17,7 @@
             <div id="loader-slides" class="loader">
                 <div class="loader-elements" style="height: 100%">
                     <div id="loader-background" class="loader-element">
-                        <img class="img-fluid d-block w-100" src="static/images/sonos.png" alt="Sonos"> 
+                        <img class="img-fluid d-block w-100 sonos" src="static/images/sonos.png" alt="Sonos"> 
                     </div>
                     <div id="loader-flow" class="loader-element">
                         <img class="img-fluid d-block w-100 fade-in" src="static/images/flow.png" alt="Flow"> 
@@ -28,11 +28,54 @@
 
     <div id="content">
         <header class="top-panel">
-            <img class="img-fluid" src="static/images/sonosflow.png" alt="Sonos Flow"> 
+            <h5 id="rooms-tab">Rooms</h5>
+            <h6 id="pause-all">Pause All</h6>
        </header>
-        <div class="container">
+       <div class="rooms">
+           <div class="room" id="kitchen">
+               <div class="room-header">
+                   <h6 class="room-title">Kitchen</h6>
+                   <div class="group-icon group"></div>
+               </div>
+               <div class="music-container">
+                   <div class="song-cover cover"></div>
+                   <div class="music-info-container">
+                       <div class="provider">Apple Music</div>
+                       <div class="music-info">Good Ass Intro (feat. Bj the Chicago...</div>
+                   </div>
+               </div>
+               <div class="listeners-container">
+                    <h7 class="title-listeners">Listening: </h7>
+                    <h7 class="listeners">Mom, Dad, Sonny</h7>
+                    <div class="join-in" onclick="myFunction('Kitchen')">Join</div>
+               </div>
+           </div>
+           <div class="room" id="sonnys-room">
+                <div class="room-header">
+                    <h6 class="room-title">Sonny's Room</h6>
+                    <div class="group-icon group" style="margin-left: 110px"></div>
+                </div>
+                <div class="music-container">
+                    <div class="song-cover cover-hp"></div>
+                    <div class="music-info-container">
+                        <div class="provider">Apple Music</div>
+                        <div class="music-info">Honeypie By Johnny Utah</div>
+                    </div>
+                </div>
+                <div class="listeners-container">
+                     <h7 class="title-listeners" style="margin-right: 125px">Listening: </h7>
+                     <h7 class="listeners">Sonny</h7>
+                     <div class="join-in" onclick="myFunction('Sonny\'s Room')">Join</div>
+                </div>
+            </div>
+       </div>
+        <!-- <div class="container">
             <h1>Welcome</h1>
             <button class="btn btn-primary" onclick="myFunction()">Click me</button>
+        </div> -->
+        <div class="bottom-nav">
+            <div class="nav-buttons nav-background">
+            </div>
         </div>
     </div>
 
@@ -42,17 +85,34 @@
 
 
     <script>
-            function myFunction() {
+            function myFunction(room_name) {
                 const Http = new XMLHttpRequest();
                 const url='api/temp';
                 Http.open("GET", url);
-                Http.send();
+                Http.send(room_name);
     
                 Http.onreadystatechange = (e) => {
                   console.log(Http.responseText)
                 }
             }
     </script>
+    <script>
+        $(document).ready(() => {
+            setTimeout(() => {
+                $("#loader-content").css({
+                    "position": "fixed",
+                    "top": 0,
+                    "width": "100% !important",
+                    "height": "100% !important",
+                    "z-index": 1000,
+                    "animation": "fadeOutOpacity 1s ease-out",
+                });
+            }, 3000);
+            setTimeout(() => {
+                $("#loader-content").addClass("loaded");   
+            }, 4000);       
+        })
+    </script> 
 </body>
 
 </HTML>
