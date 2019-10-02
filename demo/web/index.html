@@ -18,7 +18,7 @@
             window.onload = (e) => {
                 window.playPause = false;
                 window.rooms = [];
-                window.current_room = "room1"
+                window.current_room = "room2"
                 //get speaker rooms request
                 var xmlHttp = new XMLHttpRequest();
                 xmlHttp.open( "GET", "http://localhost:8080/api/get_speaker_list", true ); // false for synchronous request
@@ -67,6 +67,55 @@
                 }
             }
 
+            previousSong = () => {
+                let address = "";
+                if (!playPause) {
+                    //song is paused, goes back playing...
+                    address = "http://localhost:8080/api/" + current_room + "/previous";
+                    playPause = true;
+                    var xmlHttp = new XMLHttpRequest();
+                    xmlHttp.open( "GET", address, false ); // false for synchronous request
+                    xmlHttp.send( null );
+                    //plays the song
+                    address = "http://localhost:8080/api/" + current_room + "/play";
+                    var xmlHttp = new XMLHttpRequest();
+                    xmlHttp.open( "GET", address, false ); // false for synchronous request
+                    xmlHttp.send( null ); 
+                } else {
+                    //song is paused, goes next song playing...
+                    address = "http://localhost:8080/api/" + current_room + "/previous";
+                    playPause = true;
+                    var xmlHttp = new XMLHttpRequest();
+                    xmlHttp.open( "GET", address, false ); // false for synchronous request
+                    xmlHttp.send( null );
+                }
+            }
+
+            nextSong = () => {
+                let address = "";
+                if (!playPause) {
+                    //song is paused, goes next song playing...
+                    address = "http://localhost:8080/api/" + current_room + "/next";
+                    playPause = true;
+                    var xmlHttp = new XMLHttpRequest();
+                    xmlHttp.open( "GET", address, false ); // false for synchronous request
+                    xmlHttp.send( null );
+                    //plays the song
+                    address = "http://localhost:8080/api/" + current_room + "/play";
+                    var xmlHttp = new XMLHttpRequest();
+                    xmlHttp.open( "GET", address, false ); // false for synchronous request
+                    xmlHttp.send( null ); 
+                } else {
+                    //song is paused, goes next song playing...
+                    address = "http://localhost:8080/api/" + current_room + "/next";
+                    playPause = true;
+                    var xmlHttp = new XMLHttpRequest();
+                    xmlHttp.open( "GET", address, false ); // false for synchronous request
+                    xmlHttp.send( null );
+                }
+            }
+
+
             //get song info - comes with AALL about song aka name stuff AND album cover
             function scene2() {
                 var xmlHttp = new XMLHttpRequest();
@@ -87,13 +136,13 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm">
-                    <button type="button" class="btn btn-primary btn-block btn-xl" onclick="scene1()">Scene #1</button>
+                    <button type="button" class="btn btn-primary btn-block btn-xl" onclick="previousSong()">Previous</button>
                 </div>
                 <div class="col-sm">
-                    <button type="button" class="btn btn-primary btn-block btn-xl" onclick="playPause_Toggle()">Scene #2</button>
+                    <button type="button" class="btn btn-primary btn-block btn-xl" onclick="playPause_Toggle()">Play</button>
                 </div>
                 <div class="col-sm">
-                    <button type="button" class="btn btn-primary btn-block btn-xl" onclick="scene3()">Scene #3</button>
+                    <button type="button" class="btn btn-primary btn-block btn-xl" onclick="nextSong()">Next</button>
                 </div>
             </div>
         </div>
