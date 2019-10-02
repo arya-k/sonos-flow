@@ -7,10 +7,12 @@
                 font-size: 10rem; 
                 font-variant:small-caps;
             }
-            .btn-xl {
-                padding: 80% 0;
-                font-size: 5rem;
-            /* INSERT CUSTOM CSS HERE */
+
+            .row {
+                margin-top: .2rem;
+                margin-bottom: .2rem;
+            }
+            
         </style>
         <script>
             function scene1() {
@@ -30,24 +32,76 @@
                 xmlHttp.open( "GET", "http://AryasMacbook:3000/api/scene3", false ); // false for synchronous request
                 xmlHttp.send( null );
             }
+
+            function playlist1() {
+                var xmlHttp = new XMLHttpRequest();
+                xmlHttp.open( "GET", "http://AryasMacbook:3000/api/playlist1", false ); // false for synchronous request
+                xmlHttp.send( null );
+            }
+
+            function playlist2() {
+                var xmlHttp = new XMLHttpRequest();
+                xmlHttp.open( "GET", "http://AryasMacbook:3000/api/playlist2", false ); // false for synchronous request
+                xmlHttp.send( null );
+            }
             // INSERT CUSTOM JAVASCRIPT HERE
         </script>
     </head>
     <body>
+<!-- 
+            <div class="col-sm">
+                    <button type="button" class="btn btn-primary btn-block" onclick="playlist1()">Playlist 1</button>
+                <div>
+                <div class="col-sm">
+                    <button type="button" class="btn btn-primary btn-block" onclick="playlist2()">Playlist 2</button>
+                <div> -->
+
         <h1>Sonos Flow</h1>
-        <div class="container">
+        <div class="container"> 
             <div class="row">
-                <div class="col-sm">
-                    <button type="button" class="btn btn-primary btn-block btn-xl" onclick="scene1()">Scene #1</button>
+                <!-- TODO: JQuery dynamically update the select element -->
+                <div class="col" style="text-align: right">
+                    <h2>Select Speaker:</h2>
                 </div>
-                <div class="col-sm">
-                    <button type="button" class="btn btn-primary btn-block btn-xl" onclick="scene2()">Scene #2</button>
+                <div class="col">
+                    <select class="form-control form-control-lg">
+                        <option>room1</option>
+                        <option>room2</option>
+                        <option>room3</option>
+                    </select>
                 </div>
-                <div class="col-sm">
-                    <button type="button" class="btn btn-primary btn-block btn-xl" onclick="scene3()">Scene #3</button>
+            </div>
+
+            <div class="row">
+                <!-- current -->
+                <!-- <div class="col" style="text-align: center"> -->
+                    <!-- <h2>Current</h2> -->
+                <!-- </div> -->
+            </div>
+            <div class="row">
+                <!-- play/pause / controls -->
+            </div>
+
+            <div class="row">
+                <!-- playlist selection -->
+            </div>
+
+            <div class="row">
+                <!--upcoming songs -->
+            </div>
+
+            <div class="row">
+                <!-- ripple/shuffle -->
+                <!-- BRUNO: add the "active" class to one of the buttons, and keep it that way until the other button is pressed. -->
+                <div class="col">
+                    <button type="button" class="btn btn-primary btn-block">Ripple</button>
+                </div>
+                <div class="col">
+                    <button type="button" class="btn btn-primary btn-block">Shuffle</button>
                 </div>
             </div>
         </div>
+
         <!-- TODO: Select current speaker -->
         <!-- TODO: View current playing song -->
         <!-- TODO: Play/Pause, Skip forward, Skip Backward -->
