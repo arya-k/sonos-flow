@@ -24,7 +24,6 @@ def get_speaker_list():
 @app.route("/api/<room>/pause")
 def pause(room):
     for k in g:
-        print(k)
         g[k].pause()
     return "OK"
 
@@ -39,6 +38,22 @@ def play(room):
     return "OK"
 
 
+@app.route("/api/<room>/next")
+def next(room):
+    if room in g:
+        play(room)
+        g[room].next()
+    return "OK"
+
+
+@app.route("/api/<room>/previous")
+def previous(room):
+    if room in g:
+        play(room)
+        g[room].previous()
+    return "OK"
+
+
 @app.route("/api/<room>/currently_playing")
 def currently_playing(room):
     if room in g:
@@ -48,8 +63,6 @@ def currently_playing(room):
     return jsonify({})
 
 
-# TODO: View current playing song
-# TODO: Play/Pause, Skip forward, Skip Backward
 # TODO: Select playlist 1
 # TODO: Select playlist 2
 # TODO: View upcoming songs in a list.
