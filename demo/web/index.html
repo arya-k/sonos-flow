@@ -11,12 +11,22 @@
                 padding: 80% 0;
                 font-size: 5rem;
             /* INSERT CUSTOM CSS HERE */
+            }
         </style>
         <script>
-            function scene1() {
-                var xmlHttp = new XMLHttpRequest();
-                xmlHttp.open( "GET", "http://AryasMacbook:3000/api/scene1", false ); // false for synchronous request
-                xmlHttp.send( null );
+            function playPause_Toggle(bool) {
+                window.playPause = (window.playPause) ? true : false;
+                if (bool) {
+                    window.playPause = bool;
+                    var xmlHttp = new XMLHttpRequest();
+                    xmlHttp.open( "GET", "http://AryasMacbook:3000/api/play", false ); // false for synchronous request
+                    xmlHttp.send( null );  
+                } else {
+                    window.playPause = bool;
+                    var xmlHttp = new XMLHttpRequest();
+                    xmlHttp.open( "GET", "http://AryasMacbook:3000/api/pause", false ); // false for synchronous request
+                    xmlHttp.send( null );  
+                }
             }
 
             function scene2() {
@@ -41,7 +51,7 @@
                     <button type="button" class="btn btn-primary btn-block btn-xl" onclick="scene1()">Scene #1</button>
                 </div>
                 <div class="col-sm">
-                    <button type="button" class="btn btn-primary btn-block btn-xl" onclick="scene2()">Scene #2</button>
+                    <button type="button" class="btn btn-primary btn-block btn-xl" onclick="playPause_Toggle(true)">Scene #2</button>
                 </div>
                 <div class="col-sm">
                     <button type="button" class="btn btn-primary btn-block btn-xl" onclick="scene3()">Scene #3</button>
