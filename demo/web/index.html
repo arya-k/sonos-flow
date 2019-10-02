@@ -1,6 +1,7 @@
 <HTML>
     <head>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
         <style>
             h1 {
                 text-align: center;
@@ -17,18 +18,30 @@
             window.onload = (e) => {
                 window.playPause = false;
                 window.rooms = [];
+                window.current_room = "room1"
                 //get speaker rooms request
                 var xmlHttp = new XMLHttpRequest();
                 xmlHttp.open( "GET", "http://localhost:8080/api/get_speaker_list", true ); // false for synchronous request
                 xmlHttp.send();
                 xmlHttp.onload = function() {
-                if (xmlHttp.status != 200) { // analyze HTTP status of the response
-                    alert(`Error ${xmlHttp.status}: ${xmlHttp.statusText}`); // e.g. 404: Not Found
-                } else { // show the rooms
-                    window.parseRooms(xmlHttp.response);
+                    if (xmlHttp.status != 200) { // analyze HTTP status of the response
+                        alert(`Error ${xmlHttp.status}: ${xmlHttp.statusText}`); // e.g. 404: Not Found
+                    } else { // show the rooms
+                        window.parseRooms(xmlHttp.response);
+                    }
                 }
-                //sets the result into a list
-                }
+                //request current speaker
+                // var xmlHttp = new XMLHttpRequest();
+                // xmlHttp.open( "GET", "http://localhost:8080/api/get_current_speaker", true ); // false for synchronous request
+                // xmlHttp.send();
+                // xmlHttp.onload = function() {
+                //     if (xmlHttp.status != 200) { // analyze HTTP status of the response
+                //         alert(`Error ${xmlHttp.status}: ${xmlHttp.statusText}`); // e.g. 404: Not Found
+                //     } else { // show the rooms
+                //         current_room = xmlHttp.response.replace(/\t/, "").replace(/ /g, "").replace(/\[/g, "").replace(/\]/g, "").replace(/\n/g, "").replace(/\"/g, "").trim()
+                //     }
+                // }
+
 
             }
 
@@ -37,17 +50,19 @@
                 console.log(rooms, "done");
             }
 
-            playPause_Toggle = (bool) => {
-                if (bool) {
-                    window.playPause = bool;
+            playPause_Toggle = () => {
+                if (playPause) {
+                    let address = "http://localhost:8080/api/" + current_room + "/pause";
+                    playPause = false;
                     var xmlHttp = new XMLHttpRequest();
-                    xmlHttp.open( "GET", "http://localhost:8080/api/play", false ); // false for synchronous request
+                    xmlHttp.open( "GET", address, false ); // false for synchronous request
                     xmlHttp.send( null );
 
                 } else {
-                    window.playPause = bool;
+                    let address = "http://localhost:8080/api/" + current_room + "/play";
+                    playPause = true;
                     var xmlHttp = new XMLHttpRequest();
-                    xmlHttp.open( "GET", "http://localhost:8080/api/pause", false ); // false for synchronous request
+                    xmlHttp.open( "GET", address, false ); // false for synchronous request
                     xmlHttp.send( null );  
                 }
             }
@@ -75,7 +90,7 @@
                     <button type="button" class="btn btn-primary btn-block btn-xl" onclick="scene1()">Scene #1</button>
                 </div>
                 <div class="col-sm">
-                    <button type="button" class="btn btn-primary btn-block btn-xl" onclick="playPause_Toggle(true)">Scene #2</button>
+                    <button type="button" class="btn btn-primary btn-block btn-xl" onclick="playPause_Toggle()">Scene #2</button>
                 </div>
                 <div class="col-sm">
                     <button type="button" class="btn btn-primary btn-block btn-xl" onclick="scene3()">Scene #3</button>
@@ -88,5 +103,7 @@
         <!-- TODO: Select playlist 1 -->
         <!-- TODO: Select playlist 2 -->
         <!-- TODO: View upcoming songs in a list. -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     </body>
+    
 </HTML>
