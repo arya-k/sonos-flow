@@ -39,7 +39,15 @@ def play(room):
     return "OK"
 
 
-# TODO: Select current speaker
+@app.route("/api/<room>/currently_playing")
+def currently_playing(room):
+    if room in g:
+        track_info = g[room].get_current_track_info()
+        if track_info["title"]:  # song is found.
+            return jsonify(track_info)
+    return jsonify({})
+
+
 # TODO: View current playing song
 # TODO: Play/Pause, Skip forward, Skip Backward
 # TODO: Select playlist 1
