@@ -1,35 +1,82 @@
 <HTML>
     <head>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
         <style>
             h1 {
                 text-align: center;
                 font-size: 10rem; 
                 font-variant:small-caps;
             }
-
-            .row {
-                margin-top: .2rem;
-                margin-bottom: .2rem;
+            .btn-xl {
+                padding: 80% 0;
+                font-size: 5rem;
+            /* INSERT CUSTOM CSS HERE */
             }
-            
         </style>
         <script>
-            function scene1() {
+            window.onload = (e) => {
+                window.playPause = false;
+                window.rooms = [];
+                window.current_room = "room1"
+                //get speaker rooms request
                 var xmlHttp = new XMLHttpRequest();
-                xmlHttp.open( "GET", "http://AryasMacbook:3000/api/scene1", false ); // false for synchronous request
-                xmlHttp.send( null );
+                xmlHttp.open( "GET", "http://localhost:8080/api/get_speaker_list", true ); // false for synchronous request
+                xmlHttp.send();
+                xmlHttp.onload = function() {
+                    if (xmlHttp.status != 200) { // analyze HTTP status of the response
+                        alert(`Error ${xmlHttp.status}: ${xmlHttp.statusText}`); // e.g. 404: Not Found
+                    } else { // show the rooms
+                        window.parseRooms(xmlHttp.response);
+                    }
+                }
+                //request current speaker
+                // var xmlHttp = new XMLHttpRequest();
+                // xmlHttp.open( "GET", "http://localhost:8080/api/get_current_speaker", true ); // false for synchronous request
+                // xmlHttp.send();
+                // xmlHttp.onload = function() {
+                //     if (xmlHttp.status != 200) { // analyze HTTP status of the response
+                //         alert(`Error ${xmlHttp.status}: ${xmlHttp.statusText}`); // e.g. 404: Not Found
+                //     } else { // show the rooms
+                //         current_room = xmlHttp.response.replace(/\t/, "").replace(/ /g, "").replace(/\[/g, "").replace(/\]/g, "").replace(/\n/g, "").replace(/\"/g, "").trim()
+                //     }
+                // }
+
+
             }
 
+            parseRooms = (json) => {
+                rooms = json.replace(/\t/, "").replace(/ /g, "").replace(/\[/g, "").replace(/\]/g, "").replace(/\n/g, "").replace(/\"/g, "").trim().split(",");
+                console.log(rooms, "done");
+            }
+
+            playPause_Toggle = () => {
+                if (playPause) {
+                    let address = "http://localhost:8080/api/" + current_room + "/pause";
+                    playPause = false;
+                    var xmlHttp = new XMLHttpRequest();
+                    xmlHttp.open( "GET", address, false ); // false for synchronous request
+                    xmlHttp.send( null );
+
+                } else {
+                    let address = "http://localhost:8080/api/" + current_room + "/play";
+                    playPause = true;
+                    var xmlHttp = new XMLHttpRequest();
+                    xmlHttp.open( "GET", address, false ); // false for synchronous request
+                    xmlHttp.send( null );  
+                }
+            }
+
+            //get song info - comes with AALL about song aka name stuff AND album cover
             function scene2() {
                 var xmlHttp = new XMLHttpRequest();
-                xmlHttp.open( "GET", "http://AryasMacbook:3000/api/scene2", false ); // false for synchronous request
+                xmlHttp.open( "GET", "http://localhost:8080/api/scene2", false ); // false for synchronous request
                 xmlHttp.send( null );
             }
 
             function scene3() {
                 var xmlHttp = new XMLHttpRequest();
-                xmlHttp.open( "GET", "http://AryasMacbook:3000/api/scene3", false ); // false for synchronous request
+                xmlHttp.open( "GET", "http://localhost:8080/api/scene3", false ); // false for synchronous request
                 xmlHttp.send( null );
             }
 
@@ -108,5 +155,7 @@
         <!-- TODO: Select playlist 1 -->
         <!-- TODO: Select playlist 2 -->
         <!-- TODO: View upcoming songs in a list. -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     </body>
+    
 </HTML>
