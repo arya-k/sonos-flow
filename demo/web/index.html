@@ -46,6 +46,22 @@
                         set_current_speaker(e.target.value);
                     })
 
+                    //populate currently playing...
+                    let address = "http://localhost:8080/api/" + current_room + "/currently_playing";
+                    var xmlHttp = new XMLHttpRequest();
+                    xmlHttp.open( "GET", address, true ); // false for synchronous request
+                    xmlHttp.send();
+                    xmlHttp.onload = function() {
+                    if (xmlHttp.status != 200) { // analyze HTTP status of the response
+                        alert(`Error ${xmlHttp.status}: ${xmlHttp.statusText}`); // e.g. 404: Not Found
+                    } else { // show the rooms
+                        let current_track = $.parseJSON(xmlHttp.response);
+                        console.log(current_track);
+                        $("#song-title").html(current_track.title);
+                        $("#song-img").attr("src",current_track.album_art);
+                    }
+                }
+
                 }, 500);
 
                 
@@ -77,6 +93,7 @@
             }
 
             playPause_Toggle = () => {
+                console.log(current_room, "Set to", !playPause);
                 if (playPause) {
                     let address = "http://localhost:8080/api/" + current_room + "/pause";
                     playPause = false;
@@ -196,11 +213,10 @@
                 <div class="col" style="text-align: center">
                     <h2>Current: </h2> 
                 </div>
-                <div class="alert alert-secondary" role="alert">
-                        Current song name
+                <div id="song-title" class="alert alert-secondary" role="alert">
                 </div>
                 <div class="col" style="text-align: center">
-                    <img src="..." class="img-fluid" width: 200 height: 200 alt="Current Song Album Art Here">
+                    <img id="song-img" src="..." class="img-fluid" width: 200 height: 200 alt="Current Song Album Art Here">
                 </div>
             </div>
             <div class="row">
