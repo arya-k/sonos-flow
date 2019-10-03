@@ -34,9 +34,10 @@
                         window.parseRooms(xmlHttp.response);
                     }
                 }
-                window.current_room = rooms[0];
 
                 setTimeout(() => {
+                    console.log(rooms.length);
+                    window.current_room = rooms[0];
                     for (let i = 0, len = rooms.length; i < len; ++i) {
                         $("#room-list").append('<option value="' + rooms[i] + '">' + rooms[i] + '</option>');
                         
@@ -45,7 +46,7 @@
                         set_current_speaker(e.target.value);
                     })
 
-                }, 100);
+                }, 500);
 
                 
 
@@ -205,13 +206,13 @@
             <div class="row">
                 <!-- play/pause / controls -->
                 <div class="col">
-                        <button type="button" class="btn btn-warning btn-block btn-lg custom-button-height"> <i class="fa fa-backward"></i></button>
+                        <button type="button" onclick="previousSong()" class="btn btn-warning btn-block btn-lg custom-button-height"> <i class="fa fa-backward"></i></button>
                     </div>
                 <div class="col-md-8">
-                        <button type="button" class="btn btn-warning btn-block btn-lg custom-button-height"><i class="fa fa-play" style="margin-right:.5rem;"></i>  <i class="fa fa-pause"></i></button>
+                        <button type="button" onclick="playPause_Toggle()" class="btn btn-warning btn-block btn-lg custom-button-height"><i class="fa fa-play" style="margin-right:.5rem;"></i>  <i class="fa fa-pause"></i></button>
                 </div>
                 <div class="col">
-                        <button type="button" class="btn btn-warning btn-block btn-lg custom-button-height"><i class="fa fa-forward"></i></button>
+                        <button type="button" onclick="nextSong()" class="btn btn-warning btn-block btn-lg custom-button-height"><i class="fa fa-forward"></i></button>
                 </div>
             </div>
 
