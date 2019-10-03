@@ -34,9 +34,10 @@
                         window.parseRooms(xmlHttp.response);
                     }
                 }
-                window.current_room = rooms[0];
 
                 setTimeout(() => {
+                    console.log(rooms.length);
+                    window.current_room = rooms[0];
                     for (let i = 0, len = rooms.length; i < len; ++i) {
                         $("#room-list").append('<option value="' + rooms[i] + '">' + rooms[i] + '</option>');
                         
@@ -45,7 +46,23 @@
                         set_current_speaker(e.target.value);
                     })
 
-                }, 100);
+                    //populate currently playing...
+                    let address = "http://localhost:8080/api/" + current_room + "/currently_playing";
+                    var xmlHttp = new XMLHttpRequest();
+                    xmlHttp.open( "GET", address, true ); // false for synchronous request
+                    xmlHttp.send();
+                    xmlHttp.onload = function() {
+                    if (xmlHttp.status != 200) { // analyze HTTP status of the response
+                        alert(`Error ${xmlHttp.status}: ${xmlHttp.statusText}`); // e.g. 404: Not Found
+                    } else { // show the rooms
+                        let current_track = $.parseJSON(xmlHttp.response);
+                        console.log(current_track);
+                        $("#song-title").html(current_track.title);
+                        $("#song-img").attr("src",current_track.album_art);
+                    }
+                }
+
+                }, 500);
 
                 
 
@@ -76,6 +93,7 @@
             }
 
             playPause_Toggle = () => {
+                console.log(current_room, "Set to", !playPause);
                 if (playPause) {
                     let address = "http://localhost:8080/api/" + current_room + "/pause";
                     playPause = false;
@@ -192,8 +210,8 @@
 
             <div class="row">
                 <!-- current -->
-                <!-- TODO: Grey box around all of this -->
-                <table class="table table-dark">
+               <!-- TODO: Grey box around all of this -->
+               <table class="table table-dark">
                     <tbody>
                             <tr>
                                 <th scope="row">Current: </th>
@@ -203,7 +221,17 @@
                             </tr>
                     </tbody>
                 </table>
-                                
+            <div class="row">
+                <!-- play/pause / controls -->
+                <div class="col">
+                        <button type="button" onclick="previousSong()" class="btn btn-warning btn-block btn-lg custom-button-height"> <i class="fa fa-backward"></i></button>
+                    </div>
+                <div class="col-md-8">
+                        <button type="button" onclick="playPause_Toggle()" class="btn btn-warning btn-block btn-lg custom-button-height"><i class="fa fa-play" style="margin-right:.5rem;"></i>  <i class="fa fa-pause"></i></button>
+                </div>
+                <div class="col">
+                        <button type="button" onclick="nextSong()" class="btn btn-warning btn-block btn-lg custom-button-height"><i class="fa fa-forward"></i></button>
+                </div>
             </div>
 
             <div class="row">
