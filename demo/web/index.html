@@ -34,9 +34,12 @@
 
                 setTimeout(() => {
                     for (let i = 0, len = rooms.length; i < len; ++i) {
-                        console.log(rooms[i]), $("#room-list");
-                        $("#room-list").append('<option onclick="window.set_current_speaker(' + '\"rooms[i]\"' + ')" value="' + rooms[i] + '">' + rooms[i] + '</option>');
+                        $("#room-list").append('<option value="' + rooms[i] + '">' + rooms[i] + '</option>');
+                        
                     }
+                    $("#room-list").on('change', (e) => {
+                        set_current_speaker(e.target.value);
+                    })
 
                 }, 100);
 
@@ -60,6 +63,7 @@
 
             set_current_speaker = (room) => {
                 current_room = room;
+                console.log("room now:", current_room);
             }
 
             parseRooms = (json) => {
