@@ -14,11 +14,11 @@
             /* INSERT CUSTOM CSS HERE */
             }
         </style>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         <script>
             window.onload = (e) => {
                 window.playPause = false;
                 window.rooms = [];
-                window.current_room = "room2"
                 //get speaker rooms request
                 var xmlHttp = new XMLHttpRequest();
                 xmlHttp.open( "GET", "http://localhost:8080/api/get_speaker_list", true ); // false for synchronous request
@@ -30,6 +30,19 @@
                         window.parseRooms(xmlHttp.response);
                     }
                 }
+                window.current_room = rooms[0];
+
+                setTimeout(() => {
+                    for (let i = 0, len = rooms.length; i < len; ++i) {
+                        console.log(rooms[i]), $("#room-list");
+                        $("#room-list").append('<option onclick="window.set_current_speaker(' + '\"rooms[i]\"' + ')" value="' + rooms[i] + '">' + rooms[i] + '</option>');
+                    }
+
+                }, 100);
+
+                
+
+
                 //request current speaker
                 // var xmlHttp = new XMLHttpRequest();
                 // xmlHttp.open( "GET", "http://localhost:8080/api/get_current_speaker", true ); // false for synchronous request
@@ -43,6 +56,10 @@
                 // }
 
 
+            }
+
+            set_current_speaker = (room) => {
+                current_room = room;
             }
 
             parseRooms = (json) => {
@@ -160,10 +177,7 @@
                     <h2>Select Speaker:</h2>
                 </div>
                 <div class="col">
-                    <select class="form-control form-control-lg">
-                        <option>room1</option>
-                        <option>room2</option>
-                        <option>room3</option>
+                    <select id="room-list" class="form-control form-control-lg">
                     </select>
                 </div>
             </div>
@@ -204,7 +218,7 @@
         <!-- TODO: Select playlist 1 -->
         <!-- TODO: Select playlist 2 -->
         <!-- TODO: View upcoming songs in a list. -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> -->
     </body>
     
 </HTML>
