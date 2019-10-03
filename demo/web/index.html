@@ -2,16 +2,20 @@
     <head>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
         <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
         <style>
             h1 {
                 text-align: center;
                 font-size: 10rem; 
                 font-variant:small-caps;
             }
-            .btn-xl {
-                padding: 80% 0;
-                font-size: 5rem;
-            /* INSERT CUSTOM CSS HERE */
+            .row {
+                padding-top: .2rem;
+                padding-bottom: .2rem; 
+            }
+
+            .custom-button-height {
+                min-height: 3.5rem;
             }
         </style>
         <script>
@@ -32,7 +36,7 @@
                 }
                 //request current speaker
                 // var xmlHttp = new XMLHttpRequest();
-                // xmlHttp.open( "GET", "http://localhost:8080/api/get_current_speaker", true ); // false for synchronous request
+                //xmlHttp.open( "GET", "http://localhost:8080/api/get_current_speaker", true ); // false for synchronous request
                 // xmlHttp.send();
                 // xmlHttp.onload = function() {
                 //     if (xmlHttp.status != 200) { // analyze HTTP status of the response
@@ -161,39 +165,94 @@
                 </div>
                 <div class="col">
                     <select class="form-control form-control-lg">
-                        <option>room1</option>
-                        <option>room2</option>
-                        <option>room3</option>
+                        <option>Room 1</option>
+                        <option>Room 2</option>
+                        <option>Room 3</option>
                     </select>
                 </div>
             </div>
 
             <div class="row">
                 <!-- current -->
-                <!-- <div class="col" style="text-align: center"> -->
-                    <!-- <h2>Current</h2> -->
-                <!-- </div> -->
+                <div class="col" style="text-align: center">
+                    <h2>Current: </h2> 
+                </div>
+                <div class="alert alert-secondary" role="alert">
+                        Current song name
+                </div>
+                <div class="col" style="text-align: center">
+                    <img src="..." class="img-fluid" width: 200 height: 200 alt="Current Song Album Art Here">
+                </div>
             </div>
             <div class="row">
                 <!-- play/pause / controls -->
+                <div class="col">
+                        <button type="button" class="btn btn-warning btn-block btn-lg custom-button-height"> <i class="fa fa-backward"></i></button>
+                    </div>
+                <div class="col-md-8">
+                        <button type="button" class="btn btn-warning btn-block btn-lg custom-button-height"><i class="fa fa-play" style="margin-right:.5rem;"></i>  <i class="fa fa-pause"></i></button>
+                </div>
+                <div class="col">
+                        <button type="button" class="btn btn-warning btn-block btn-lg custom-button-height"><i class="fa fa-forward"></i></button>
+                </div>
             </div>
 
             <div class="row">
                 <!-- playlist selection -->
+                <div class="col-md-2" style="text-align: center">
+                    <h2>BLEND </h2> 
+                </div>
+                
+                <div class="col">
+                        <select class="form-control form-control-lg">
+                        <option>Playlist Name 1</option>
+                        <option>Playlist Name 2</option>
+                        <option>Playlist Name 3</option>
+                    </select>
+                </div>
+                
+                <div class="col">
+                        <select class="form-control form-control-lg">
+                        <option>Playlist Name 1</option>
+                        <option>Playlist Name 2</option>
+                        <option>Playlist Name 3</option>
+                    </select>
+                </div>
+
             </div>
 
             <div class="row">
                 <!--upcoming songs -->
+                <ul class="list-unstyled" style="text-align: center">
+                    <li class="media">
+                        <h6 class="mt-0 mb-1">TITLE UPNEXT SONG 1</h6>
+                        <img class="mr-3" src=".../64x64" alt="Album Art 1">
+                        <div class="media-body">
+                        </div>
+                    </li>
+                    <li class="media my-4">
+                        <h6 class="mt-0 mb-1">TITLE UPNEXT SONG 2</h6>
+                        <img class="mr-3" src=".../64x64" alt="Album Art 2">
+                        <div class="media-body">
+                        </div>
+                    </li>
+                    <li class="media my-4">
+                        <h6 class="mt-0 mb-1">TITLE UPNEXT SONG 3</h6>
+                        <img class="mr-3" src=".../64x64" alt="Album Art 2">
+                        <div class="media-body">
+                        </div>
+                    </li>
+                </ul>
             </div>
 
             <div class="row">
                 <!-- ripple/shuffle -->
                 <!-- BRUNO: add the "active" class to one of the buttons, and keep it that way until the other button is pressed. -->
                 <div class="col">
-                    <button type="button" class="btn btn-primary btn-block">Ripple</button>
+                    <button type="button" class="btn btn-primary btn-block custom-button-height">Ripple</button>
                 </div>
                 <div class="col">
-                    <button type="button" class="btn btn-primary btn-block">Shuffle</button>
+                    <button type="button" class="btn btn-primary btn-block custom-button-height">Shuffle</button>
                 </div>
             </div>
         </div>
