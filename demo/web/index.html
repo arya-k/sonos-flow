@@ -192,35 +192,25 @@
 
             <div class="row">
                 <!-- current -->
-                <div class="col" style="text-align: center">
-                    <h2>Current: </h2> 
-                </div>
-                <div class="alert alert-secondary" role="alert">
-                        Current song name
-                </div>
-                <div class="col" style="text-align: center">
-                    <img src="..." class="img-fluid" width: 200 height: 200 alt="Current Song Album Art Here">
-                </div>
-            </div>
-            <div class="row">
-                <!-- play/pause / controls -->
-                <div class="col">
-                        <button type="button" class="btn btn-warning btn-block btn-lg custom-button-height"> <i class="fa fa-backward"></i></button>
-                    </div>
-                <div class="col-md-8">
-                        <button type="button" class="btn btn-warning btn-block btn-lg custom-button-height"><i class="fa fa-play" style="margin-right:.5rem;"></i>  <i class="fa fa-pause"></i></button>
-                </div>
-                <div class="col">
-                        <button type="button" class="btn btn-warning btn-block btn-lg custom-button-height"><i class="fa fa-forward"></i></button>
-                </div>
+                <!-- TODO: Grey box around all of this -->
+                <table class="table table-dark">
+                    <tbody>
+                            <tr>
+                                <th scope="row">Current: </th>
+                                <td>Current Song Name</td>
+                                <th scope="col">Artist</th>
+                                <td><img src="..." class="img-fluid" width: 200 height: 200 alt="Current Song Album Art Here"></td>
+                            </tr>
+                    </tbody>
+                </table>
+                                
             </div>
 
             <div class="row">
                 <!-- playlist selection -->
                 <div class="col-md-2" style="text-align: center">
-                    <h2>BLEND </h2> 
+                    <h2> Playlist 1 </h2> 
                 </div>
-                
                 <div class="col">
                         <select class="form-control form-control-lg">
                         <option>Playlist Name 1</option>
@@ -228,7 +218,9 @@
                         <option>Playlist Name 3</option>
                     </select>
                 </div>
-                
+                <div class="col-md-2" style="text-align: center">
+                        <h2> Playlist 2 </h2> 
+                </div>
                 <div class="col">
                         <select class="form-control form-control-lg">
                         <option>Playlist Name 1</option>
@@ -241,31 +233,58 @@
 
             <div class="row">
                 <!--upcoming songs -->
-                <ul class="list-unstyled" style="text-align: center">
-                    <li class="media">
-                        <h6 class="mt-0 mb-1">TITLE UPNEXT SONG 1</h6>
-                        <img class="mr-3" src=".../64x64" alt="Album Art 1">
-                        <div class="media-body">
-                        </div>
-                    </li>
-                    <li class="media my-4">
-                        <h6 class="mt-0 mb-1">TITLE UPNEXT SONG 2</h6>
-                        <img class="mr-3" src=".../64x64" alt="Album Art 2">
-                        <div class="media-body">
-                        </div>
-                    </li>
-                    <li class="media my-4">
-                        <h6 class="mt-0 mb-1">TITLE UPNEXT SONG 3</h6>
-                        <img class="mr-3" src=".../64x64" alt="Album Art 2">
-                        <div class="media-body">
-                        </div>
-                    </li>
-                </ul>
+                <table class="table table-dark table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">Up Next: </th>
+                            <th scope="col">Title</th>
+                            <th scope="col">Artist</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>Title 1</td>
+                            <td>Artist 1</td>
+                            <td><img class="mr-3" src=".../20x20" alt="Album Art 1"> </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">2</th>
+                            <td>Title 2</td>
+                            <td>Artist 2</td>
+                            <td><img class="mr-3" src=".../20x20" alt="Album Art 2"> </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">3</th>
+                            <td>Title 3</td>
+                            <td>Artist 3</td>
+                            <td><img class="mr-3" src=".../20x20" alt="Album Art 3"> </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">4</th>
+                            <td>Title 4</td>
+                            <td>Artist 4</td>
+                            <td><img class="mr-3" src=".../20x20" alt="Album Art 4"> </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">2</th>
+                            <td>Title 5</td>
+                            <td>Artist 5</td>
+                            <td><img class="mr-3" src=".../20x20" alt="Album Art 5"> </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">5</th>
+                            <td>Title 5</td>
+                            <td>Artist 5</td>
+                            <td><img class="mr-3" src=".../20x20" alt="Album Art 5"> </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
 
             <div class="row">
                 <!-- ripple/shuffle -->
-                <!-- BRUNO: add the "active" class to one of the buttons, and keep it that way until the other button is pressed. -->
+                <!-- TODO BRUNO: add the "active" class to one of the buttons, and keep it that way until the other button is pressed. -->
                 <div class="col">
                     <button type="button" class="btn btn-primary btn-block custom-button-height">Ripple</button>
                 </div>
@@ -281,6 +300,7 @@
         <!-- TODO: Select playlist 1 -->
         <!-- TODO: Select playlist 2 -->
         <!-- TODO: View upcoming songs in a list. -->
+        <!-- TODO: Volume toggle -->
         <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> -->
     </body>
     
