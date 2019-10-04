@@ -10,8 +10,8 @@
                 font-variant:small-caps;
             }
             .row {
-                padding-top: .2rem;
-                padding-bottom: .2rem; 
+                padding-top: .5rem;
+                padding-bottom: .5rem; 
             }
 
             .custom-button-height {
@@ -49,65 +49,111 @@
                         
                     }
                     $("#room-list").on('change', (e) => {
-                        set_current_speaker(e.target.value);
-                    })
-
-                    //populate currently playing...
-                    let address = "http://localhost:8080/api/" + current_room + "/currently_playing";
-                    var xmlHttp = new XMLHttpRequest();
-                    xmlHttp.open( "GET", address, true ); // false for synchronous request
-                    xmlHttp.send();
-                    xmlHttp.onload = function() {
-                    if (xmlHttp.status != 200) { // analyze HTTP status of the response
-                        alert(`Error ${xmlHttp.status}: ${xmlHttp.statusText}`); // e.g. 404: Not Found
-                    } else { // show the rooms
-                        let current_track = $.parseJSON(xmlHttp.response);
-                        console.log(current_track);
-                        $("#song-title").html(current_track.title);
-                        $("#song-img").attr("src",current_track.album_art);
-                    }
-                }
+                        change_room(e.target.value);
+                    });
+                    updateCurrentTrack();
+                    isPlaying();
+                    updateUpNext();
 
                 }, 500);
-
-                
-
-
-                //request current speaker
-                // var xmlHttp = new XMLHttpRequest();
-                //xmlHttp.open( "GET", "http://localhost:8080/api/get_current_speaker", true ); // false for synchronous request
-                // xmlHttp.send();
-                // xmlHttp.onload = function() {
-                //     if (xmlHttp.status != 200) { // analyze HTTP status of the response
-                //         alert(`Error ${xmlHttp.status}: ${xmlHttp.statusText}`); // e.g. 404: Not Found
-                //     } else { // show the rooms
-                //         current_room = xmlHttp.response.replace(/\t/, "").replace(/ /g, "").replace(/\[/g, "").replace(/\]/g, "").replace(/\n/g, "").replace(/\"/g, "").trim()
-                //     }
-                // }
 
 
             }
 
+            updateUpNext = (selection) => {
+                selection = "ripple";
+                if (selection == "ripple" || selection == "shuffle") {
+                    let address = "http://localhost:8080/api/upcoming";
+                    var xmlHttp = new XMLHttpRequest();
+                    let params = "playlist1=playlist1&playlist2=playlist2&method="+selection;
+                    xmlHttp.open( "POST", address, true ); // false for synchronous request
+                    xmlHttp.send( params );
+                    xmlHttp.onload = () => {
+                        console.log(xmlHttp.response);
+                   }
+                }
+
+            }
+
+            updateCurrentTrack = () => {
+                //populate currently playing...
+                let address = "http://localhost:8080/api/" + current_room + "/currently_playing";
+                var xmlHttp = new XMLHttpRequest();
+                xmlHttp.open( "GET", address, true ); // false for synchronous request
+                xmlHttp.send();
+                xmlHttp.onload = function() {
+                if (xmlHttp.status != 200) { // analyze HTTP status of the response
+                    alert(`Error ${xmlHttp.status}: ${xmlHttp.statusText}`); // e.g. 404: Not Found
+                } else { // show the rooms
+                    let current_track = $.parseJSON(xmlHttp.response);
+                    $("#song-title").html(current_track.title);
+                    $("#song-artist").html(current_track.artist);
+                    $("#song-img").attr("src",current_track.album_art);
+                }
+                }
+            }
+
+            isPlaying = () => {
+                let address = "http://localhost:8080/api/" + current_room + "/is_playing";
+                var xmlHttp = new XMLHttpRequest();
+                xmlHttp.open( "GET", address, true ); // false for synchronous request
+                xmlHttp.send();
+                xmlHttp.onload = () => {
+                if (xmlHttp.status != 200) {
+                    return;
+                }
+                    if (xmlHttp.response == "PLAYING") {
+                        this.playPause = true;
+                        $(".fa-play").css('display', 'none');
+                        $(".fa-pause").css('display', '');
+                    } else {
+                        this.playPause = false;
+                        $(".fa-play").css('display', '');
+                        $(".fa-pause").css('display', 'none');
+
+                    }
+                }
+            }
+
+            change_room = (room) => {
+                //pause music and update track and change icon
+                set_current_speaker(room);
+                $(".fa-play").css('display', '');
+                $(".fa-pause").css('display', 'none');
+                let address = "http://localhost:8080/api/" + current_room + "/pause";
+                playPause = false;
+                var xmlHttp = new XMLHttpRequest();
+                xmlHttp.open( "GET", address, false ); // false for synchronous request
+                xmlHttp.send( null );
+                updateCurrentTrack();
+            }
+
             set_current_speaker = (room) => {
-                current_room = room;
+                current_room = room; //an array
                 console.log("room now:", current_room);
             }
 
             parseRooms = (json) => {
-                rooms = json.replace(/\t/, "").replace(/ /g, "").replace(/\[/g, "").replace(/\]/g, "").replace(/\n/g, "").replace(/\"/g, "").trim().split(",");
+                rooms = json.replace(/\t/, "").replace(/ /g, "").replace(/\[/g, "").replace(/\]/g, "").replace(/\n/g, "").replace(/\"/g, "").replace(/\+/, " + ").trim().split(",");
                 console.log(rooms, "done");
             }
 
             playPause_Toggle = () => {
                 console.log(current_room, "Set to", !playPause);
-                if (playPause) {
+                if (playPause) {//PAUSE
+                    //set icon to play
+                    $(".fa-play").css('display', '');
+                    $(".fa-pause").css('display', 'none');
                     let address = "http://localhost:8080/api/" + current_room + "/pause";
                     playPause = false;
                     var xmlHttp = new XMLHttpRequest();
                     xmlHttp.open( "GET", address, false ); // false for synchronous request
                     xmlHttp.send( null );
 
-                } else {
+                } else { //PLAY
+                    //set icon to pause
+                    $(".fa-pause").css('display', '');
+                    $(".fa-play").css('display', 'none');
                     let address = "http://localhost:8080/api/" + current_room + "/play";
                     playPause = true;
                     var xmlHttp = new XMLHttpRequest();
@@ -138,6 +184,7 @@
                     xmlHttp.open( "GET", address, false ); // false for synchronous request
                     xmlHttp.send( null );
                 }
+                updateCurrentTrack();
             }
 
             nextSong = () => {
@@ -162,6 +209,7 @@
                     xmlHttp.open( "GET", address, false ); // false for synchronous request
                     xmlHttp.send( null );
                 }
+                updateCurrentTrack();
             }
 
 
@@ -217,9 +265,9 @@
             <div class="row" style="margin-top: 2rem;">
                 <div class="container-fluid">
                     <div class="text-center">
-                        <img class="centered" src="https://i2.wp.com/www.covermesongs.com/wp-content/uploads/2015/06/the-doors-tribute-400x400.jpg" class="img-fluid" width: 10rem height: 10rem alt="Current Song Album Art Here">
-                        <p style="font-size: 21; margin-top: 1.5rem;">Current Song Name</p>
-                        <p style="font-size: 18">Artist</p>
+                        <img id="song-img" class="centered" src="web/song-cover.png" class="img-fluid" width: 10rem height: 10rem alt="Current Song Album Art Here">
+                        <p id="song-title" style="font-size: 21; margin-top: 1.5rem;">Current Song Name</p>
+                        <p id="song-name" style="font-size: 18">Artist</p>
                     </div>
                 </div>
                 
@@ -227,14 +275,17 @@
             <div class="row">
                 <!-- play/pause / controls -->
                 <div class="col">
-                        <button type="button" onclick="previousSong()" class="btn btn-secondary btn-block btn-lg custom-button-height"> <i class="fa fa-backward"></i></button>
+                        <button type="button" onclick="previousSong()" class="btn btn-block btn-lg custom-button-height"> <i class="fa fa-backward"></i></button>
                     </div>
                 <div class="col-md-8">
-                        <button type="button" onclick="playPause_Toggle()" class="btn btn-secondary btn-block btn-lg custom-button-height"><i class="fa fa-play" style="margin-right:.5rem;"></i>  <i class="fa fa-pause"></i></button>
+                        <button type="button" onclick="playPause_Toggle()" class="btn btn-block btn-lg custom-button-height"> <i class="fa fa-play"></i> <i class="fa fa-pause" style="display: none"></i></button>
                 </div>
                 <div class="col">
-                        <button type="button" onclick="nextSong()" class="btn btn-secondary btn-block btn-lg custom-button-height"><i class="fa fa-forward"></i></button>
+                        <button type="button" onclick="nextSong()" class="btn btn-block btn-lg custom-button-height"><i class="fa fa-forward"></i></button>
                 </div>
+
+            </div>
+            <div class="row">
             </div>
 
             <div class="row" style="margin-top: 3rem;">
@@ -263,6 +314,17 @@
             </div>
 
             <div class="row">
+                <!-- ripple/shuffle -->
+                <!-- TODO BRUNO: add the "active" class to one of the buttons, and keep it that way until the other button is pressed. -->
+                <div class="col">
+               <button type="button" class="btn btn-primary btn-block custom-button-height">Ripple</button>
+            </div>
+            <div class="col">
+                <button type="button" class="btn btn-primary btn-block custom-button-height">Shuffle</button>
+            </div>
+        </div>
+
+            <div class="row">
                 <!--upcoming songs -->
                 <table class="table table-dark table-hover" style="margin-top: 1rem;">
                     <thead>
@@ -277,62 +339,46 @@
                             <th scope="row">1</th>
                             <td>Title 1</td>
                             <td>Artist 1</td>
-                            <td><img class="mr-3" src=".../20x20" alt="Album Art 1"> </td>
+                            <td><img class="mr-3" src="web/song-cover.png" alt="Album Art 1"> </td>
                         </tr>
                         <tr>
                             <th scope="row">2</th>
                             <td>Title 2</td>
                             <td>Artist 2</td>
-                            <td><img class="mr-3" src=".../20x20" alt="Album Art 2"> </td>
+                            <td><img class="mr-3" src="web/song-cover.png" alt="Album Art 2"> </td>
                         </tr>
                         <tr>
                             <th scope="row">3</th>
                             <td>Title 3</td>
                             <td>Artist 3</td>
-                            <td><img class="mr-3" src=".../20x20" alt="Album Art 3"> </td>
+                            <td><img class="mr-3" src="web/song-cover.png" alt="Album Art 3"> </td>
                         </tr>
                         <tr>
                             <th scope="row">4</th>
                             <td>Title 4</td>
                             <td>Artist 4</td>
-                            <td><img class="mr-3" src=".../20x20" alt="Album Art 4"> </td>
+                            <td><img class="mr-3" src="web/song-cover.png" alt="Album Art 4"> </td>
                         </tr>
                         <tr>
                             <th scope="row">2</th>
                             <td>Title 5</td>
                             <td>Artist 5</td>
-                            <td><img class="mr-3" src=".../20x20" alt="Album Art 5"> </td>
+                            <td><img class="mr-3" src="web/song-cover.png" alt="Album Art 5"> </td>
                         </tr>
                         <tr>
                             <th scope="row">5</th>
                             <td>Title 5</td>
                             <td>Artist 5</td>
-                            <td><img class="mr-3" src=".../20x20" alt="Album Art 5"> </td>
+                            <td><img class="mr-3" src="web/song-cover.png" alt="Album Art 5"> </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-
-            <div class="row">
-                <!-- ripple/shuffle -->
-                <!-- TODO BRUNO: add the "active" class to one of the buttons, and keep it that way until the other button is pressed. -->
-                <div class="col">
-                    <button type="button" class="btn btn-primary btn-block custom-button-height">Ripple</button>
-                </div>
-                <div class="col">
-                    <button type="button" class="btn btn-primary btn-block custom-button-height">Shuffle</button>
-                </div>
-            </div>
         </div>
 
-        <!-- TODO: Select current speaker -->
-        <!-- TODO: View current playing song -->
-        <!-- TODO: Play/Pause, Skip forward, Skip Backward -->
         <!-- TODO: Select playlist 1 -->
         <!-- TODO: Select playlist 2 -->
         <!-- TODO: View upcoming songs in a list. -->
-        <!-- TODO: Volume toggle -->
-        <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> -->
     </body>
     
 </HTML>
