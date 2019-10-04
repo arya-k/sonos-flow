@@ -46,9 +46,24 @@
                         change_room(e.target.value);
                     });
                     updateCurrentTrack();
+                    updateUpNext();
 
                 }, 500);
 
+
+            }
+
+            updateUpNext = (selection) => {
+                selection = "ripple";
+                if (selection == "ripple" || selection == "shuffle") {
+                    let address = "http://localhost:8080/api/upcoming" + selection;
+                    var xmlHttp = new XMLHttpRequest();
+                    xmlHttp.open( "GET", address, true ); // false for synchronous request
+                    xmlHttp.send( null );
+                    xmlHttp.onload = () => {
+                        console.log(xmlHttp.response);
+                   }
+                }
 
             }
 
@@ -85,12 +100,15 @@
             }
 
             set_current_speaker = (room) => {
-                current_room = room;
+                current_room = room; //an array
                 console.log("room now:", current_room);
             }
 
             parseRooms = (json) => {
                 rooms = json.replace(/\t/, "").replace(/ /g, "").replace(/\[/g, "").replace(/\]/g, "").replace(/\n/g, "").replace(/\"/g, "").trim().split(",");
+                for (let i = 0; i < rooms.length; ++i) {
+                    rooms[i] = rooms[i].replace(/ /,"").split("+");
+                }
                 console.log(rooms, "done");
             }
 
@@ -100,7 +118,7 @@
                     //set icon to play
                     $(".fa-play").css('display', '');
                     $(".fa-pause").css('display', 'none');
-                    let address = "http://localhost:8080/api/" + current_room + "/pause";
+                    let address = "http://localhost:8080/api/" + current_room[0] + "/pause";
                     playPause = false;
                     var xmlHttp = new XMLHttpRequest();
                     xmlHttp.open( "GET", address, false ); // false for synchronous request
@@ -110,7 +128,7 @@
                     //set icon to pause
                     $(".fa-pause").css('display', '');
                     $(".fa-play").css('display', 'none');
-                    let address = "http://localhost:8080/api/" + current_room + "/play";
+                    let address = "http://localhost:8080/api/" + current_room[0] + "/play";
                     playPause = true;
                     var xmlHttp = new XMLHttpRequest();
                     xmlHttp.open( "GET", address, false ); // false for synchronous request
@@ -122,19 +140,19 @@
                 let address = "";
                 if (!playPause) {
                     //song is paused, goes back playing...
-                    address = "http://localhost:8080/api/" + current_room + "/previous";
+                    address = "http://localhost:8080/api/" + current_room[0] + "/previous";
                     playPause = true;
                     var xmlHttp = new XMLHttpRequest();
                     xmlHttp.open( "GET", address, false ); // false for synchronous request
                     xmlHttp.send( null );
                     //plays the song
-                    address = "http://localhost:8080/api/" + current_room + "/play";
+                    address = "http://localhost:8080/api/" + current_room[0] + "/play";
                     var xmlHttp = new XMLHttpRequest();
                     xmlHttp.open( "GET", address, false ); // false for synchronous request
                     xmlHttp.send( null ); 
                 } else {
                     //song is paused, goes next song playing...
-                    address = "http://localhost:8080/api/" + current_room + "/previous";
+                    address = "http://localhost:8080/api/" + current_room[0] + "/previous";
                     playPause = true;
                     var xmlHttp = new XMLHttpRequest();
                     xmlHttp.open( "GET", address, false ); // false for synchronous request
@@ -147,19 +165,19 @@
                 let address = "";
                 if (!playPause) {
                     //song is paused, goes next song playing...
-                    address = "http://localhost:8080/api/" + current_room + "/next";
+                    address = "http://localhost:8080/api/" + current_room[0] + "/next";
                     playPause = true;
                     var xmlHttp = new XMLHttpRequest();
                     xmlHttp.open( "GET", address, false ); // false for synchronous request
                     xmlHttp.send( null );
                     //plays the song
-                    address = "http://localhost:8080/api/" + current_room + "/play";
+                    address = "http://localhost:8080/api/" + current_room[0] + "/play";
                     var xmlHttp = new XMLHttpRequest();
                     xmlHttp.open( "GET", address, false ); // false for synchronous request
                     xmlHttp.send( null ); 
                 } else {
                     //song is paused, goes next song playing...
-                    address = "http://localhost:8080/api/" + current_room + "/next";
+                    address = "http://localhost:8080/api/" + current_room[0] + "/next";
                     playPause = true;
                     var xmlHttp = new XMLHttpRequest();
                     xmlHttp.open( "GET", address, false ); // false for synchronous request
@@ -226,7 +244,7 @@
                             <tr style="line-height: 3">
                                 <td id="song-title">Current Song Name</td>
                                 <th id="song-artist" scope="col">Artist</th>
-                                <td><img id="song-img" src="..." class="img-fluid" style="width: 50px; height: 50px;" alt="Current Song Album Art Here"></td>
+                                <td><img id="song-img" src="../../ui_testing/static/images/song-cover.PNG" class="img-fluid" style="width: 50px; height: 50px;" alt="Current Song Album Art Here"></td>
                             </tr>
                     </tbody>
                 </table>
