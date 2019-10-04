@@ -59,8 +59,9 @@
                 if (selection == "ripple" || selection == "shuffle") {
                     let address = "http://localhost:8080/api/upcoming";
                     var xmlHttp = new XMLHttpRequest();
+                    params = "playlist1=playlist1&playlist2=playlist2&method="+selection;
                     xmlHttp.open( "GET", address, true ); // false for synchronous request
-                    xmlHttp.send( selection );
+                    xmlHttp.send( params );
                     xmlHttp.onload = () => {
                         console.log(xmlHttp.response);
                    }
