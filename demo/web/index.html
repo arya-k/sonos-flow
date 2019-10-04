@@ -82,19 +82,19 @@
                 }
             }
 
-            updateUpNext = (selection) => {
+            updateUpNext = (p1, p2, selection) => {
                 selection = "ripple";
                 if (selection == "ripple" || selection == "shuffle") {
-                    let address = "http://localhost:8080/api/upcoming";
+                    let address = "http://localhost:8080/api/upcoming/" + p1 + "/" + p2 + "/" + selection;
                     var xmlHttp = new XMLHttpRequest();
-                    var params = JSON.stringify("p1=" + "playlist1" + "&ps2=" + "playlist2" + "&method=" + selection);
+                    // var params = JSON.stringify("p1=" + "playlist1" + "&ps2=" + "playlist2" + "&method=" + selection);
                     // console.log(params);
-                    xmlHttp.open( "POST", address, true ); // false for synchronous request
+                    xmlHttp.open( "GET", address, true ); // false for synchronous request
                     xmlHttp.setRequestHeader('Content-type', 'application/json');
                     xmlHttp.onload = () => {
                         console.log(xmlHttp.response);
                    }
-                   xmlHttp.send(params);
+                   xmlHttp.send(null);
                 }
 
             }
