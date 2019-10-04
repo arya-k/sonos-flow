@@ -46,6 +46,7 @@
                         change_room(e.target.value);
                     });
                     updateCurrentTrack();
+                    isPlaying();
                     updateUpNext();
 
                 }, 500);
@@ -56,10 +57,10 @@
             updateUpNext = (selection) => {
                 selection = "ripple";
                 if (selection == "ripple" || selection == "shuffle") {
-                    let address = "http://localhost:8080/api/upcoming" + selection;
+                    let address = "http://localhost:8080/api/upcoming";
                     var xmlHttp = new XMLHttpRequest();
                     xmlHttp.open( "GET", address, true ); // false for synchronous request
-                    xmlHttp.send( null );
+                    xmlHttp.send( selection );
                     xmlHttp.onload = () => {
                         console.log(xmlHttp.response);
                    }
@@ -69,7 +70,7 @@
 
             updateCurrentTrack = () => {
                 //populate currently playing...
-                let address = "http://localhost:8080/api/" + current_room + "/currently_playing";
+                let address = "http://localhost:8080/api/" + current_room[0] + "/currently_playing";
                 var xmlHttp = new XMLHttpRequest();
                 xmlHttp.open( "GET", address, true ); // false for synchronous request
                 xmlHttp.send();
@@ -83,6 +84,29 @@
                     $("#song-artist").html(current_track.artist);
                     $("#song-img").attr("src",current_track.album_art);
                 }
+                }
+            }
+
+            isPlaying = () => {
+                let address = "http://localhost:8080/api/" + current_room[0] + "/is_playing";
+                var xmlHttp = new XMLHttpRequest();
+                xmlHttp.open( "GET", address, true ); // false for synchronous request
+                xmlHttp.send();
+                xmlHttp.onload = () => {
+                if (xmlHttp.status != 200) {
+                    return;
+                 }
+                    let playing = $.parseJSON(xmlHttp.response);
+                    if (playing == "PLAYING") {
+                        this.playPause = true;
+                        $(".fa-play").css('display', 'none');
+                        $(".fa-pause").css('display', '');
+                    } else {
+                        this.playPause = false;
+                        $(".fa-play").css('display', '');
+                        $(".fa-pause").css('display', 'none');
+
+                    }
                 }
             }
 
