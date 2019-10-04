@@ -17,6 +17,12 @@
             .custom-button-height {
                 min-height: 3.5rem;
             }
+
+            .centered {
+                text-align: center;
+            }
+
+
         </style>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         <script>
@@ -247,7 +253,7 @@
         <div class="container"> 
             <div class="row">
                 <!-- TODO: JQuery dynamically update the select element -->
-                <div class="col" style="text-align: right">
+                <div class="col" style="text-align: center">
                     <h2>Select Speaker:</h2>
                 </div>
                 <div class="col">
@@ -256,18 +262,15 @@
                 </div>
             </div>
 
-            <div class="row">
-                <!-- current -->
-               <!-- TODO: Grey box around all of this -->
-               <table class="table table-dark">
-                    <tbody>
-                            <tr style="line-height: 3">
-                                <td id="song-title">Current Song Name</td>
-                                <th id="song-artist" scope="col">Artist</th>
-                                <td><img id="song-img" src="web/song-cover.png" class="img-fluid" style="width: 50px; height: 50px;" alt="Current Song Album Art Here"></td>
-                            </tr>
-                    </tbody>
-                </table>
+            <div class="row" style="margin-top: 2rem;">
+                <div class="container-fluid">
+                    <div class="text-center">
+                        <img id="song-img" class="centered" src="web/song-cover.png" class="img-fluid" width: 10rem height: 10rem alt="Current Song Album Art Here">
+                        <p id="song-title" style="font-size: 21; margin-top: 1.5rem;">Current Song Name</p>
+                        <p id="song-name" style="font-size: 18">Artist</p>
+                    </div>
+                </div>
+                
             </div>
             <div class="row">
                 <!-- play/pause / controls -->
@@ -285,7 +288,7 @@
             <div class="row">
             </div>
 
-            <div class="row">
+            <div class="row" style="margin-top: 3rem;">
                 <!-- playlist selection -->
                 <div class="col-md-2" style="text-align: center">
                     <h2> Playlist 1 </h2> 
@@ -323,7 +326,7 @@
 
             <div class="row">
                 <!--upcoming songs -->
-                <table class="table table-dark table-hover">
+                <table class="table table-dark table-hover" style="margin-top: 1rem;">
                     <thead>
                         <tr>
                             <th scope="col">Up Next: </th>
@@ -373,14 +376,9 @@
             </div>
         </div>
 
-        <!-- TODO: Select current speaker -->
-        <!-- TODO: View current playing song -->
-        <!-- TODO: Play/Pause, Skip forward, Skip Backward -->
         <!-- TODO: Select playlist 1 -->
         <!-- TODO: Select playlist 2 -->
         <!-- TODO: View upcoming songs in a list. -->
-        <!-- TODO: Volume toggle -->
-        <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> -->
     </body>
     
 </HTML>
