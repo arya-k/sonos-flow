@@ -82,18 +82,9 @@ def get_playlists():
     return jsonify(get_sonos_playlist_names(g["auth"]))
 
 
-@app.route("/api/upcoming", methods=["POST"])
-def upcoming():
-    print(request.args)
-    # Assert all arguments are passed:
-    if not "p1" in request.args:
-        return "ERROR: missing p1"
-    elif not "p2" in request.args:
-        return "ERROR: missing p2"
-    elif not "method" in request.args:
-        return "ERROR: missing method"
-
-    # Assert the mewthod exists.
+@app.route("/api/upcoming/<p1>/<p2>/<method>")
+def upcoming(p1, p2, method):
+    # Assert the method exists.
     if request.args.method not in ["ripple", "shuffle"]:
         return "ERROR: method must be one of ['ripple', 'shuffle']"
 

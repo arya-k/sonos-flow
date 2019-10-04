@@ -13,3 +13,5 @@ Thumbs.db
 # Python compiled files #
 #########################
 __pycache__
+
+.cache*
