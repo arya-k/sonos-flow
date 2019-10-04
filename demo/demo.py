@@ -29,7 +29,7 @@ def get_speaker_list():
 @app.route("/api/<zone>/is_playing")
 def is_playing(zone):
     if zone in g["zones"]:
-        return g["zones"].coordinator.get_current_transport_info()
+        return g["zones"][zone].coordinator.get_current_transport_info()
     else:
         return "PLAYING"
 
@@ -78,6 +78,7 @@ def currently_playing(zone):
 
 @app.route("/api/upcoming", methods=["POST"])
 def upcoming():
+    print(request.args)
     # Assert all arguments are passed:
     if not "playlist1" in request.args:
         return "ERROR: missing playlist1"
