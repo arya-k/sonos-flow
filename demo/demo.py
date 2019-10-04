@@ -1,4 +1,5 @@
 import soco
+from spotify import get_auth, get_sonos_playlist_names
 from os.path import join, dirname, realpath
 from flask import Flask, send_from_directory, g, request, jsonify
 
@@ -76,6 +77,11 @@ def currently_playing(zone):
     return jsonify({})
 
 
+@app.route("/api/get_playlists")
+def get_playlists():
+    return jsonify(get_sonos_playlist_names(g["auth"]))
+
+
 @app.route("/api/upcoming", methods=["POST"])
 def upcoming():
     print(request.args)
@@ -109,6 +115,7 @@ if __name__ == "__main__":
             " + ".join(x.player_name for x in z.members): z
             for z in list(speakers)[0].all_groups
         },
+        "auth": get_auth(),
     }
 
     app.run(host="0.0.0.0", port=8080, debug=True)
