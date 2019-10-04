@@ -65,12 +65,14 @@
                 if (selection == "ripple" || selection == "shuffle") {
                     let address = "http://localhost:8080/api/upcoming";
                     var xmlHttp = new XMLHttpRequest();
-                    let params = "playlist1=playlist1&playlist2=playlist2&method="+selection;
+                    var params = JSON.stringify("p1=" + "playlist1" + "&ps2=" + "playlist2" + "&method=" + selection);
+                    console.log(params);
                     xmlHttp.open( "POST", address, true ); // false for synchronous request
-                    xmlHttp.send( params );
+                    xmlHttp.setRequestHeader('Content-type', 'application/json');
                     xmlHttp.onload = () => {
                         console.log(xmlHttp.response);
                    }
+                   xmlHttp.send(params);
                 }
 
             }
@@ -265,9 +267,9 @@
             <div class="row" style="margin-top: 2rem;">
                 <div class="container-fluid">
                     <div class="text-center">
-                        <img id="song-img" class="centered" src="web/song-cover.png" class="img-fluid" width: 10rem height: 10rem alt="Current Song Album Art Here">
+                        <img id="song-img" class="centered" src="web/song-cover.png" class="img-fluid" style="width: 10rem; height: 10rem;" alt="Current Song Album Art Here">
                         <p id="song-title" style="font-size: 21; margin-top: 1.5rem;">Current Song Name</p>
-                        <p id="song-name" style="font-size: 18">Artist</p>
+                        <p id="song-artist" style="font-size: 18">Artist</p>
                     </div>
                 </div>
                 

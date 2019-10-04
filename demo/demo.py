@@ -86,14 +86,14 @@ def get_playlists():
 def upcoming():
     print(request.args)
     # Assert all arguments are passed:
-    if not "playlist1" in request.args:
-        return "ERROR: missing playlist1"
-    elif not "playlist2" in request.args:
-        return "ERROR: missing playlist2"
+    if not "p1" in request.args:
+        return "ERROR: missing p1"
+    elif not "p2" in request.args:
+        return "ERROR: missing p2"
     elif not "method" in request.args:
         return "ERROR: missing method"
 
-    # Assert the method exists.
+    # Assert the mewthod exists.
     if request.args.method not in ["ripple", "shuffle"]:
         return "ERROR: method must be one of ['ripple', 'shuffle']"
 
