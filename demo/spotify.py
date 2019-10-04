@@ -4,6 +4,9 @@ Meant to emulate actually using spotify live.
 
 thearyaskumar@icloud.com -> 21oobpw6ffqofvcjwggcrkxey
 
+TODO: better caching to files.
+TODO: just use numpy
+
 """
 
 import spotipy
@@ -88,14 +91,17 @@ def gen_data_files(csv_metadata_headers, csv_vector_headers):
 
 def load_tree():
     # load the files:
+
     with open("data.pkl", "rb") as f:
         data_metadata, data_vectors = pickle.load(f)
 
     track_id_to_index = {t[1]: i for i, t in enumerate(data_metadata)}
+
     tree = spatial.KDTree(data_vectors)
 
     return {
         "data_vectors": data_vectors,
+        "data_metadata": data_metadata,
         "track_id_to_index": track_id_to_index,
         "tree": tree,
     }
@@ -140,6 +146,56 @@ def get_playlist_vector(sp, track_ids, track_id_to_index, data_vectors):
     return [x / len(track_ids) for x in to_ret]
 
 
+def get_tracks_near_playlist(sp, playlist1, playlist2, matching_data, num_tracks=10):
+    """ Given two playlist names, gets the average playlist vector. """
+    playlists = sp.user_playlists(USER_ID)["items"]
+
+    p1_vector = []
+    p2_vector = []
+
+    for playlist in playlists:
+        if playlist["name"] in [playlist1, playlist2]:
+            all_track_ids = []
+
+            results = sp.user_playlist(USER_ID, playlist["id"], fields="tracks,next")
+            tracks = results["tracks"]
+
+            all_track_ids += [t["track"]["id"] for t in tracks["items"]]
+
+            while tracks["next"]:
+                tracks = sp.next(tracks)
+                all_track_ids += [t["track"]["id"] for t in tracks["items"]]
+
+            if playlist["name"] == playlist1:
+                p1_vector = all_track_ids.copy()
+
+            if playlist["name"] == playlist2:
+                p2_vector = all_track_ids.copy()
+
+    indexes = matching_data["tree"].query(
+        [
+            (p1 + p2) / 2
+            for p1, p2 in zip(
+                get_playlist_vector(
+                    sp,
+                    p1_vector,
+                    matching_data["track_id_to_index"],
+                    matching_data["data_vectors"],
+                ),
+                get_playlist_vector(
+                    sp,
+                    p2_vector,
+                    matching_data["track_id_to_index"],
+                    matching_data["data_vectors"],
+                ),
+            )
+        ],
+        num_tracks,
+    )[1]
+
+    return [matching_data["data_metadata"][i][2] for i in indexes]
+
+
 ########
 # MAIN #
 ########
@@ -149,32 +205,4 @@ if __name__ == "__main__":
 
     matching_data = load_tree()
 
-    playlists = sp.user_playlists(USER_ID)["items"]
-
-    for playlist in playlists:
-        all_track_ids = []
-
-        results = sp.user_playlist(USER_ID, playlist["id"], fields="tracks,next")
-        tracks = results["tracks"]
-
-        all_track_ids += [t["track"]["id"] for t in tracks["items"]]
-
-        while tracks["next"]:
-            tracks = sp.next(tracks)
-            all_track_ids += [t["track"]["id"] for t in tracks["items"]]
-
-        print(
-            playlist["name"],
-            len(all_track_ids),
-            "[{}]".format(
-                ", ".join(
-                    "{:.3f}".format(x)
-                    for x in get_playlist_vector(
-                        sp,
-                        all_track_ids,
-                        matching_data["track_id_to_index"],
-                        matching_data["data_vectors"],
-                    )
-                )
-            ),
-        )
+    print(get_tracks_near_playlist(sp, "SONOS_Jazz", "SONOS_Pop", matching_data))
