@@ -30,6 +30,8 @@
                 window.playPause = false;
                 window.rooms = [];
                 window.playlists = [];
+                window.current_room = "";
+                window.go = false;
                 //get speaker rooms request
                 var xmlHttp = new XMLHttpRequest();
                 xmlHttp.open( "GET", "http://localhost:8080/api/get_speaker_list", true ); // false for synchronous request
@@ -42,15 +44,6 @@
                         getPlaylists();
                     }
                 }
-
-                setTimeout(() => {
-                    console.log(rooms.length, playlists.length);
-                    window.current_room = rooms[0];
-                    updateCurrentTrack();
-                    isPlaying();
-                    updateUpNext();
-                    populateDropDowns();
-                }, 750);
             }
 
             populateDropDowns = () => {
@@ -60,10 +53,12 @@
                 $("#room-list").on('change', (e) => {
                     change_room(e.target.value);
                 });
-                for (let i = 0, len = playlists.length; i < len; ++i) {
-                    $("#plist-1").append('<option value="' + playlists[i] + '">' + playlists[i] + '</option>');
-                    $("#plist-2").append('<option value="' + playlists[i] + '">' + playlists[i] + '</option>');
-                }
+                setTimeout(() => {
+                    for (let i = 0, len = playlists.length; i < len; ++i) {
+                        $("#plist-1").append('<option value="' + playlists[i] + '">' + playlists[i] + '</option>');
+                        $("#plist-2").append('<option value="' + playlists[i] + '">' + playlists[i] + '</option>');
+                    }
+                }, 100);
 
             }
 
@@ -76,13 +71,17 @@
                     if (xmlHttp.status != 200) { // analyze HTTP status of the response
                         alert(`Error ${xmlHttp.status}: ${xmlHttp.statusText}`); // e.g. 404: Not Found
                     } else { // show the rooms
-                        playlists = $.parseJSON(xmlHttp.response);
-                        // console.log(playlists);
+                        playlists = $.parseJSON(xmlHttp.response);                
+                        console.log(rooms.length, playlists.length);
+                        isPlaying();
+                        updateUpNext();
+                        populateDropDowns();
                     }
                 }
             }
 
             updateUpNext = (p1, p2, selection) => {
+                p1 = "rock", p2 = "jazz";
                 selection = "ripple";
                 if (selection == "ripple" || selection == "shuffle") {
                     let address = "http://localhost:8080/api/upcoming/" + p1 + "/" + p2 + "/" + selection;
@@ -109,7 +108,9 @@
                 if (xmlHttp.status != 200) { // analyze HTTP status of the response
                     alert(`Error ${xmlHttp.status}: ${xmlHttp.statusText}`); // e.g. 404: Not Found
                 } else { // show the rooms
+                // console.log(xmlHttp.response);
                     let current_track = $.parseJSON(xmlHttp.response);
+                    // console.log(current_track);
                     $("#song-title").html(current_track.title);
                     $("#song-artist").html(current_track.artist);
                     $("#song-img").attr("src",current_track.album_art);
@@ -157,8 +158,10 @@
             }
 
             parseRooms = (json) => {
-                rooms = json.replace(/\t/, "").replace(/ /g, "").replace(/\[/g, "").replace(/\]/g, "").replace(/\n/g, "").replace(/\"/g, "").replace(/\+/, " + ").trim().split(",");
-                console.log(rooms, "done");
+                rooms = json.replace(/\t/, "").replace(/\[/g, "").replace(/\]/g, "").replace(/\n/g, "").replace(/\"/g, "").replace(/ /, "").trim().split(",");
+                // console.log(rooms, "done");
+                current_room = rooms[0];
+                updateCurrentTrack();
             }
 
             playPause_Toggle = () => {

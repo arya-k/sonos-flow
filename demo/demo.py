@@ -103,7 +103,7 @@ if __name__ == "__main__":
     g = {
         "rooms": {z.player_name: z for z in speakers},
         "zones": {
-            " + ".join(x.player_name for x in z.members): z
+            "+".join(x.player_name for x in z.members): z
             for z in list(speakers)[0].all_groups
         },
         "auth": get_auth(),
