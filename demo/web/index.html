@@ -32,9 +32,11 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         <script>
             window.onload = (e) => {
+                window.shuffleMethod = "ripple"
                 window.playPause = false;
                 window.rooms = [];
                 window.playlists = [];
+                window.selectedPlaylists = ["Rock","Jazz"];
                 window.current_room = "";
                 window.go = false;
                 //get speaker rooms request
@@ -63,6 +65,12 @@
                         $("#plist-1").append('<option value="' + playlists[i] + '">' + playlists[i] + '</option>');
                         $("#plist-2").append('<option value="' + playlists[i] + '">' + playlists[i] + '</option>');
                     }
+                        $("#plist-1").on('change', (e) => {
+                            selectedPlaylists[0] = e.target.value;
+                        });
+                        $("#plist-2").on('change', (e) => {
+                            selectedPlaylists[1] = e.target.value;
+                        });
                 }, 100);
 
             }
@@ -79,19 +87,21 @@
                         playlists = $.parseJSON(xmlHttp.response);                
                         console.log(rooms.length, playlists.length);
                         isPlaying();
-                        updateUpNext();
+                        updateUpNext(selectedPlaylists[0], selectedPlaylists[1]);
                         populateDropDowns();
                     }
                 }
             }
 
-            updateUpNext = (p1, p2, selection) => {
-                p1 = "Rock", p2 = "jJazz";
-                selection = "ripple";
-                if (selection == "ripple" || selection == "shuffle") {
-                    let address = "http://localhost:8080/api/upcoming"
-                    var params = "p1=" + p1 + "&p2=" + p2 + "&room=" + current_room + "&method=" + selection;
-                    $.post(address, params, (data, status) => {
+            switchMethod = (method) => {
+                shuffleMethod = method;
+                updateUpNext(selectedPlaylists[0], selectedPlaylists[1]);
+            }
+
+            updateUpNext = (p1, p2) => {
+                if (shuffleMethod == "ripple" || shuffleMethod == "blend") {
+                    let address = "http://localhost:8080/api/upcoming/" + p1 +"/"+p2+"/"+shuffleMethod;
+                    $.get(address, null, (data, status) => {
                         if (status != "success") {
                             console.log(`${data} and status is ${status}`)
                         } else {
@@ -99,7 +109,7 @@
                             for (let i = 0; i < data.length; ++i) {
                                 $("#title-"+(i+1)).html(data[i].title);
                                 $("#artist-"+(i+1)).html(data[i].artist);
-                                $("#cover-"+(i+1)).attr("src",data[i].album_art);
+                                $("#cover-"+(i+1)).attr("src",data[i].album);
                             }
                         }
                         // console.log(`${data} and status is ${status}`)
@@ -160,7 +170,7 @@
                 xmlHttp.open( "GET", address, false ); // false for synchronous request
                 xmlHttp.send( null );
                 updateCurrentTrack();
-                updateUpNext();
+                updateUpNext(selectedPlaylists[0], selectedPlaylists[1]);
             }
 
             set_current_speaker = (room) => {
@@ -221,7 +231,7 @@
                     xmlHttp.open( "GET", address, false ); // false for synchronous request
                     xmlHttp.send( null );
                 }
-                updateUpNext();
+                updateUpNext(selectedPlaylists[0], selectedPlaylists[1]);
                 updateCurrentTrack();
                 $(".fa-pause").css('display', '');
                 $(".fa-play").css('display', 'none');
@@ -249,7 +259,7 @@
                     xmlHttp.open( "GET", address, false ); // false for synchronous request
                     xmlHttp.send( null );
                 }
-                updateUpNext();
+                updateUpNext(selectedPlaylists[0], selectedPlaylists[1]);
                 updateCurrentTrack();
                 $(".fa-pause").css('display', '');
                 $(".fa-play").css('display', 'none');
@@ -354,10 +364,12 @@
                 <!-- ripple/shuffle -->
                 <!-- TODO BRUNO: add the "active" class to one of the buttons, and keep it that way until the other button is pressed. -->
                 <div class="col">
-               <button type="button" class="btn btn-primary btn-block custom-button-height">Ripple</button>
+               <button type="button" class="btn btn-primary btn-block custom-button-height"
+                        onclick="switchMethod('ripple')">Ripple</button>
             </div>
             <div class="col">
-                <button type="button" class="btn btn-primary btn-block custom-button-height">Shuffle</button>
+                <button type="button" class="btn btn-primary btn-block custom-button-height"
+                        onclick="switchMethod('blend')">Blend</button>
             </div>
         </div>
 
