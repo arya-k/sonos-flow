@@ -22,6 +22,11 @@
                 text-align: center;
             }
 
+            .upcomingArt {
+                width: 30px;
+                height: 30px;
+            }
+
 
         </style>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -84,16 +89,21 @@
                 p1 = "rock", p2 = "jazz";
                 selection = "ripple";
                 if (selection == "ripple" || selection == "shuffle") {
-                    let address = "http://localhost:8080/api/upcoming/" + p1 + "/" + p2 + "/" + selection;
-                    var xmlHttp = new XMLHttpRequest();
-                    // var params = JSON.stringify("p1=" + "playlist1" + "&ps2=" + "playlist2" + "&method=" + selection);
-                    // console.log(params);
-                    xmlHttp.open( "GET", address, true ); // false for synchronous request
-                    xmlHttp.setRequestHeader('Content-type', 'application/json');
-                    xmlHttp.onload = () => {
-                        console.log(xmlHttp.response);
-                   }
-                   xmlHttp.send(null);
+                    let address = "http://localhost:8080/api/upcoming"
+                    var params = "p1=" + p1 + "&p2=" + p2 + "&room=" + current_room + "&method=" + selection;
+                    $.post(address, params, (data, status) => {
+                        if (status != "success") {
+                            console.log(`${data} and status is ${status}`)
+                        } else {
+                            console.log(data);
+                            for (let i = 0; i < data.length; ++i) {
+                                $("#title-"+(i+1)).html(data[i].title);
+                                $("#artist-"+(i+1)).html(data[i].artist);
+                                $("#cover-"+(i+1)).attr("src",data[i].album_art);
+                            }
+                        }
+                        // console.log(`${data} and status is ${status}`)
+                    })
                 }
 
             }
@@ -150,6 +160,7 @@
                 xmlHttp.open( "GET", address, false ); // false for synchronous request
                 xmlHttp.send( null );
                 updateCurrentTrack();
+                updateUpNext();
             }
 
             set_current_speaker = (room) => {
@@ -184,7 +195,7 @@
                     playPause = true;
                     var xmlHttp = new XMLHttpRequest();
                     xmlHttp.open( "GET", address, false ); // false for synchronous request
-                    xmlHttp.send( null );  
+                    xmlHttp.send( null ); 
                 }
             }
 
@@ -210,7 +221,10 @@
                     xmlHttp.open( "GET", address, false ); // false for synchronous request
                     xmlHttp.send( null );
                 }
+                updateUpNext();
                 updateCurrentTrack();
+                $(".fa-pause").css('display', '');
+                $(".fa-play").css('display', 'none');
             }
 
             nextSong = () => {
@@ -226,7 +240,7 @@
                     address = "http://localhost:8080/api/" + current_room + "/play";
                     var xmlHttp = new XMLHttpRequest();
                     xmlHttp.open( "GET", address, false ); // false for synchronous request
-                    xmlHttp.send( null ); 
+                    xmlHttp.send( null );
                 } else {
                     //song is paused, goes next song playing...
                     address = "http://localhost:8080/api/" + current_room + "/next";
@@ -235,7 +249,10 @@
                     xmlHttp.open( "GET", address, false ); // false for synchronous request
                     xmlHttp.send( null );
                 }
+                updateUpNext();
                 updateCurrentTrack();
+                $(".fa-pause").css('display', '');
+                $(".fa-play").css('display', 'none');
             }
 
 
@@ -357,39 +374,63 @@
                     <tbody>
                         <tr>
                             <th scope="row">1</th>
-                            <td>Title 1</td>
-                            <td>Artist 1</td>
-                            <td><img class="mr-3" src="web/song-cover.png" alt="Album Art 1"> </td>
+                            <td id="title-1">Title 1</td>
+                            <td id="artist-1">Artist 1</td>
+                            <td><img id="cover-1" class="mr-3 upcomingArt" src="web/song-cover.png" alt="Album Art 1"> </td>
                         </tr>
                         <tr>
                             <th scope="row">2</th>
-                            <td>Title 2</td>
-                            <td>Artist 2</td>
-                            <td><img class="mr-3" src="web/song-cover.png" alt="Album Art 2"> </td>
+                            <td id="title-2">Title 2</td>
+                            <td id="artist-2">Artist 2</td>
+                            <td><img id="cover-2" class="mr-3 upcomingArt" src="web/song-cover.png" alt="Album Art 2"> </td>
                         </tr>
                         <tr>
                             <th scope="row">3</th>
-                            <td>Title 3</td>
-                            <td>Artist 3</td>
-                            <td><img class="mr-3" src="web/song-cover.png" alt="Album Art 3"> </td>
+                            <td id="title-3">Title 3</td>
+                            <td id="artist-3">Artist 3</td>
+                            <td><img id="cover-3" class="mr-3 upcomingArt" src="web/song-cover.png" alt="Album Art 3"> </td>
                         </tr>
                         <tr>
                             <th scope="row">4</th>
-                            <td>Title 4</td>
-                            <td>Artist 4</td>
-                            <td><img class="mr-3" src="web/song-cover.png" alt="Album Art 4"> </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">2</th>
-                            <td>Title 5</td>
-                            <td>Artist 5</td>
-                            <td><img class="mr-3" src="web/song-cover.png" alt="Album Art 5"> </td>
+                            <td id="title-4">Title 4</td>
+                            <td id="artist-4">Artist 4</td>
+                            <td><img id="cover-4" class="mr-3 upcomingArt" src="web/song-cover.png" alt="Album Art 4"> </td>
                         </tr>
                         <tr>
                             <th scope="row">5</th>
-                            <td>Title 5</td>
-                            <td>Artist 5</td>
-                            <td><img class="mr-3" src="web/song-cover.png" alt="Album Art 5"> </td>
+                            <td id="title-5">Title 5</td>
+                            <td id="artist-5">Artist 5</td>
+                            <td><img id="cover-5" class="mr-3 upcomingArt" src="web/song-cover.png" alt="Album Art 5"> </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">6</th>
+                            <td id="title-6">Title 5</td>
+                            <td id="artist-6">Artist 5</td>
+                            <td><img id="cover-6" class="mr-3 upcomingArt" src="web/song-cover.png" alt="Album Art 5"> </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">7</th>
+                            <td id="title-7">Title 3</td>
+                            <td id="artist-7">Artist 3</td>
+                            <td><img id="cover-7" class="mr-3 upcomingArt" src="web/song-cover.png" alt="Album Art 3"> </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">8</th>
+                            <td id="title-8">Title 4</td>
+                            <td id="artist-8">Artist 4</td>
+                            <td><img id="cover-8" class="mr-3 upcomingArt" src="web/song-cover.png" alt="Album Art 4"> </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">9</th>
+                            <td id="title-9">Title 5</td>
+                            <td id="artist-9">Artist 5</td>
+                            <td><img id="cover-9" class="mr-3 upcomingArt" src="web/song-cover.png" alt="Album Art 5"> </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">10</th>
+                            <td id="title-10">Title 5</td>
+                            <td id="artist-10">Artist 5</td>
+                            <td><img id="cover-10" class="mr-3 upcomingArt" src="web/song-cover.png" alt="Album Art 5"> </td>
                         </tr>
                     </tbody>
                 </table>

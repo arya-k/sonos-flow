@@ -82,14 +82,25 @@ def get_playlists():
     return jsonify(get_sonos_playlist_names(g["auth"]))
 
 
-@app.route("/api/upcoming/<p1>/<p2>/<method>")
-def upcoming(p1, p2, method):
-    # Assert the method exists.
-    if request.args.method not in ["ripple", "shuffle"]:
+@app.route("/api/upcoming", methods=["POST"])
+def upcoming():
+    print(request.form)
+    # Assert all arguments are passed:
+    if not "p1" in request.form:
+        return "ERROR: missing p1"
+    elif not "p2" in request.form:
+        return "ERROR: missing p2"
+    elif not "method" in request.form:
+        return "ERROR: missing method"
+    elif not "room" in request.form:
+        return "ERROR: missing room"
+
+    # Assert the mewthod exists.
+    if request.form["method"] not in ["ripple", "shuffle"]:
         return "ERROR: method must be one of ['ripple', 'shuffle']"
 
     # TODO: apply actual intelligence to this.
-    return jsonify([g["rooms"]["room1"].get_current_track_info() for _ in range(10)])
+    return jsonify([g["rooms"][request.form["room"]].get_current_track_info() for _ in range(10)])
 
 
 # TODO: Select playlist 1
