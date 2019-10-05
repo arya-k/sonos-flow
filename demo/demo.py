@@ -1,5 +1,10 @@
 import soco
-from spotify import get_auth, get_sonos_playlist_names
+from spotify import (
+    get_auth,
+    get_sonos_playlist_names,
+    get_tracks_near_playlist,
+    load_tree,
+)
 from os.path import join, dirname, realpath
 from flask import Flask, send_from_directory, g, request, jsonify
 
@@ -85,16 +90,16 @@ def get_playlists():
 @app.route("/api/upcoming/<p1>/<p2>/<method>")
 def upcoming(p1, p2, method):
     # Assert the method exists.
-    if request.args.method not in ["ripple", "shuffle"]:
+
+    if method not in ["ripple", "shuffle"]:
         return "ERROR: method must be one of ['ripple', 'shuffle']"
 
-    # TODO: apply actual intelligence to this.
-    return jsonify([g["rooms"]["room1"].get_current_track_info() for _ in range(10)])
+    return jsonify(
+        get_tracks_near_playlist(
+            g["auth"], "SONOS_" + p1, "SONOS_" + p2, g["matching_data"], num_tracks=10
+        )
+    )
 
-
-# TODO: Select playlist 1
-# TODO: Select playlist 2
-# TODO: View upcoming songs in a list.
 
 if __name__ == "__main__":
     speakers = soco.discover()
@@ -107,6 +112,7 @@ if __name__ == "__main__":
             for z in list(speakers)[0].all_groups
         },
         "auth": get_auth(),
+        "matching_data": load_tree(),
     }
 
     app.run(host="0.0.0.0", port=8080, debug=True)
