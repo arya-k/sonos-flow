@@ -141,7 +141,7 @@ def get_playlist_vector(sp, track_ids, track_id_to_index, data_vectors):
     return to_ret / float(len(track_ids))
 
 
-def get_tracks_near_playlist(sp, playlist1, playlist2, matching_data, num_tracks=1):
+def blend_playlists(sp, playlist1, playlist2, matching_data, num_tracks=10):
     """ Given two playlist names, gets the average playlist vector. """
     playlists = sp.user_playlists(USER_ID)["items"]
 
@@ -150,8 +150,6 @@ def get_tracks_near_playlist(sp, playlist1, playlist2, matching_data, num_tracks
 
     for playlist in playlists:
         if playlist["name"].lower() in [playlist1.lower(), playlist2.lower()]:
-
-            print(playlist["name"].lower())
 
             all_track_ids = []
 
@@ -197,6 +195,52 @@ def get_tracks_near_playlist(sp, playlist1, playlist2, matching_data, num_tracks
 
     album_art = [t["album"]["images"][0]["url"] for t in tracks]
     song_metadata = [matching_data["data_metadata"][i] for i in indexes.flatten()]
+
+    return [
+        {"title": title, "artist": artist, "album": album_art}
+        for (artist, _, title), album_art in zip(song_metadata, album_art)
+    ]
+
+
+def ripple_merge_playlists(sp, playlist1, playlist2, matching_data, num_tracks=10):
+    """ Literally just merge the first n songs of the playlists"""
+    playlists = sp.user_playlists(USER_ID)["items"]
+
+    p1_vector = []
+    p2_vector = []
+
+    for playlist in playlists:
+        if playlist["name"].lower() in [playlist1.lower(), playlist2.lower()]:
+
+            all_track_ids = []
+
+            results = sp.user_playlist(USER_ID, playlist["id"], fields="tracks,next")
+            tracks = results["tracks"]
+
+            all_track_ids += [t["track"]["id"] for t in tracks["items"]]
+
+            while tracks["next"]:
+                tracks = sp.next(tracks)
+                all_track_ids += [t["track"]["id"] for t in tracks["items"]]
+
+            if playlist["name"].lower() == playlist1.lower():
+                p1_vector = all_track_ids.copy()
+
+            if playlist["name"].lower() == playlist2.lower():
+                p2_vector = all_track_ids.copy()
+
+    accepted_trackids = [p for p12 in zip(p1_vector, p2_vector) for p in p12][
+        :num_tracks
+    ]
+
+    tracks = sp.tracks(accepted_trackids)["tracks"]
+    album_art = [t["album"]["images"][0]["url"] for t in tracks]
+    song_metadata = [
+        matching_data["data_metadata"][
+            matching_data["track_id_to_index"][trackid["id"]]
+        ]
+        for trackid in tracks
+    ]
 
     return [
         {"title": title, "artist": artist, "album": album_art}

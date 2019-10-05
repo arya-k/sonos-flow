@@ -2,7 +2,8 @@ import soco
 from spotify import (
     get_auth,
     get_sonos_playlist_names,
-    get_tracks_near_playlist,
+    ripple_merge_playlists,
+    blend_playlists,
     load_tree,
 )
 from os.path import join, dirname, realpath
@@ -89,16 +90,29 @@ def get_playlists():
 
 @app.route("/api/upcoming/<p1>/<p2>/<method>")
 def upcoming(p1, p2, method):
-    # Assert the method exists.
-
-    if method not in ["ripple", "shuffle"]:
-        return "ERROR: method must be one of ['ripple', 'shuffle']"
-
-    return jsonify(
-        get_tracks_near_playlist(
-            g["auth"], "SONOS_" + p1, "SONOS_" + p2, g["matching_data"], num_tracks=10
+    if method == "ripple":
+        return jsonify(
+            ripple_merge_playlists(
+                g["auth"],
+                "SONOS_" + p1,
+                "SONOS_" + p2,
+                g["matching_data"],
+                num_tracks=10,
+            )
         )
-    )
+
+    if method == "blend":
+        return jsonify(
+            blend_playlists(
+                g["auth"],
+                "SONOS_" + p1,
+                "SONOS_" + p2,
+                g["matching_data"],
+                num_tracks=10,
+            )
+        )
+
+    return "ERROR: method must be one of ['ripple', 'shuffle']"
 
 
 if __name__ == "__main__":
