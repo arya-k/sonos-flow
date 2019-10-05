@@ -105,11 +105,11 @@ def upcoming():
         return "ERROR: method must be one of ['ripple', 'shuffle']"
 
     # TODO: apply actual intelligence to this.
-    return jsonify([g["rooms"][request.form["room"]].get_current_track_info() for _ in range(10)])
+    #return jsonify([g["rooms"][request.form["room"]].get_current_track_info() for _ in range(10)])
 
     return jsonify(
         get_tracks_near_playlist(
-            g["auth"], "SONOS_" + p1, "SONOS_" + p2, g["matching_data"], num_tracks=10
+            g["auth"], "SONOS_" + request.form["p1"], "SONOS_" + request.form["p2"], g["matching_data"], num_tracks=10
         )
     )
 
