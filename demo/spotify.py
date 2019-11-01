@@ -2,7 +2,7 @@
 
 Meant to emulate actually using spotify live.
 
-thearyaskumar@icloud.com -> 21oobpw6ffqofvcjwggcrkxey
+alfredherbstb@gmail.com -> 3b2focyvbu47d2d1m9o6zueet
 
 TODO: better caching to files.
 TODO: just use numpy
@@ -13,13 +13,14 @@ import pickle
 import spotipy
 import numpy as np
 from spotipy import util
+from spotipy.oauth2 import SpotifyClientCredentials
 from scipy import spatial
 
 #############
 # CONSTANTS #
 #############
 
-USER_ID = "21oobpw6ffqofvcjwggcrkxey"
+USER_ID = "3b2focyvbu47d2d1m9o6zueet"
 
 csv_metadata_headers = ["artist_name", "track_id", "track_name"]
 
@@ -33,13 +34,14 @@ csv_vector_headers = [
     "speechiness",
     "tempo",
     "valence",
-    "popularity",
+    # "popularity",
 ]
 
 #############
 # UTILITIES #
 #############
 
+# TRACK_IDS_LIST = []
 
 def is_playlist_valid(sp, track_ids):
     """ Checks whether the (hardcoded) playlist_uri contains enough valid songs. """
@@ -58,12 +60,14 @@ def add_to_playlist(sp, playlist_name, track_ids):
     playlists = sp.user_playlists(USER_ID)
     found_playlist = False
     for p in playlists["items"]:
-        if p["name"] == playlist_name:
+        if p["name"] == "SONOS_queue":
             found_playlist = True
-            sp.user_playlist_add_tracks(USER_ID, p["id"], track_ids)
+            sp.user_playlist_replace_tracks(USER_ID, p["id"], track_ids)
 
     if not found_playlist:
         print("ERROR: Couldn't find the the playlist")
+
+    return track_ids
 
 
 #############
@@ -77,6 +81,8 @@ def gen_data_files(csv_metadata_headers, csv_vector_headers):
 
     # read the data file:
     raw_csv = pd.read_csv("SpotifyAudioFeaturesApril2019.csv")
+    # raw_csv = pd.read_csv("newdata.csv")
+    print("reading", raw_csv)
 
     # generate data subfiles.
     data_metadata = []
@@ -111,15 +117,15 @@ def load_tree():
 def get_auth():
     """ Returns an authorized spotify token. """
 
+    # client_credentials_manager = SpotifyClientCredentials()
     scope = "playlist-modify-public"
     token = util.prompt_for_user_token(
-        "thearyaskumar@icloud.com",
+        "alfredherbstb@gmail.com",
         scope,
-        client_id="0a2c500ef2514d08a12f0bc13e7d64f2",
-        client_secret="38a7c8c848284ca5b6d4f6aa12d26ce5",
+        client_id="c9a7df5e7a4145ddb30e2631e2ccb046",
+        client_secret="5cfed1bf5fd845f0bf75685440a05245",
         redirect_uri="http://localhost/",
     )
-
     return spotipy.Spotify(auth=token)
 
 
@@ -140,8 +146,7 @@ def get_playlist_vector(sp, track_ids, track_id_to_index, data_vectors):
 
     return to_ret / float(len(track_ids))
 
-
-def blend_playlists(sp, playlist1, playlist2, matching_data, num_tracks=10):
+def blend_playlists(sp, playlist1, playlist2, matching_data, num_tracks=30):
     """ Given two playlist names, gets the average playlist vector. """
     playlists = sp.user_playlists(USER_ID)["items"]
 
@@ -193,8 +198,23 @@ def blend_playlists(sp, playlist1, playlist2, matching_data, num_tracks=10):
         "tracks"
     ]
 
+    track_ids = [matching_data["data_metadata"][i][1] for i in indexes.flatten()]
+    add_to_playlist(sp, "SONOS_queue", track_ids)
+
     album_art = [t["album"]["images"][0]["url"] for t in tracks]
     song_metadata = [matching_data["data_metadata"][i] for i in indexes.flatten()]
+
+    return [
+        {"track_ids": track_ids, "matching_data": matching_data, "indexes": indexes}
+    ]
+
+def blend_merge_pt_2(sp, track_ids, matching_data, indexes):
+    
+    tracks = sp.tracks(track_ids)["tracks"]
+    
+    album_art = [t["album"]["images"][0]["url"] for t in tracks]
+    song_metadata = [matching_data["data_metadata"][i] for i in indexes.flatten()]
+    
 
     return [
         {"title": title, "artist": artist, "album": album_art}
@@ -202,7 +222,7 @@ def blend_playlists(sp, playlist1, playlist2, matching_data, num_tracks=10):
     ]
 
 
-def ripple_merge_playlists(sp, playlist1, playlist2, matching_data, num_tracks=10):
+def ripple_merge_playlists(sp, playlist1, playlist2, matching_data, num_tracks=30):
     """ Literally just merge the first n songs of the playlists"""
     playlists = sp.user_playlists(USER_ID)["items"]
 
@@ -242,10 +262,31 @@ def ripple_merge_playlists(sp, playlist1, playlist2, matching_data, num_tracks=1
         for trackid in tracks
     ]
 
+    track_ids = accepted_trackids
+    # self.TRACK_IDS_LIST = track_ids
+    add_to_playlist(sp, "SONOS_queue", track_ids)
+
+    return track_ids
+
+    # return [
+    #     {"title": title, "artist": artist, "album": album_art}
+    #     for (artist, _, title), album_art in zip(song_metadata, album_art)
+    # ]
+
+def ripple_merge_pt_2(sp, track_ids, matching_data):
+    tracks = sp.tracks(track_ids)["tracks"]
+    album_art = [t["album"]["images"][0]["url"] for t in tracks]
+    song_metadata = [
+        matching_data["data_metadata"][
+            matching_data["track_id_to_index"][trackid["id"]]
+        ]
+        for trackid in tracks
+    ]
+
     return [
         {"title": title, "artist": artist, "album": album_art}
         for (artist, _, title), album_art in zip(song_metadata, album_art)
-    ]
+]
 
 
 ########
@@ -257,8 +298,8 @@ if __name__ == "__main__":
     gen_data_files(csv_metadata_headers, csv_vector_headers)
 
     matching_data = load_tree()
-    print(
-        get_tracks_near_playlist(
-            sp, "SONOS_EDM", "SONOS_Piano", matching_data, num_tracks=10
-        )
+    print("done"
+        # get_tracks_near_playlist(
+        #     sp, "SONOS_EDM", "SONOS_Piano", matching_data, num_tracks=10
+        # )
     )

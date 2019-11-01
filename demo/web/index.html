@@ -36,7 +36,7 @@
                 window.playPause = false;
                 window.rooms = [];
                 window.playlists = [];
-                window.selectedPlaylists = ["Rock","Jazz"];
+                window.selectedPlaylists = ["T","S"];
                 window.current_room = "";
                 window.go = false;
                 //get speaker rooms request
@@ -67,12 +67,15 @@
                     }
                         $("#plist-1").on('change', (e) => {
                             selectedPlaylists[0] = e.target.value;
+                            console.log(e.target.value);
+                            console.log(selectedPlaylists);
                         });
                         $("#plist-2").on('change', (e) => {
                             selectedPlaylists[1] = e.target.value;
+                            console.log(e.target.value);
+                            console.log(selectedPlaylists);
                         });
                 }, 100);
-
             }
 
             getPlaylists = () => {
@@ -231,7 +234,7 @@
                     xmlHttp.open( "GET", address, false ); // false for synchronous request
                     xmlHttp.send( null );
                 }
-                updateUpNext(selectedPlaylists[0], selectedPlaylists[1]);
+                // updateUpNext(selectedPlaylists[0], selectedPlaylists[1]);
                 updateCurrentTrack();
                 $(".fa-pause").css('display', '');
                 $(".fa-play").css('display', 'none');
@@ -259,7 +262,7 @@
                     xmlHttp.open( "GET", address, false ); // false for synchronous request
                     xmlHttp.send( null );
                 }
-                updateUpNext(selectedPlaylists[0], selectedPlaylists[1]);
+                // updateUpNext(selectedPlaylists[0], selectedPlaylists[1]);
                 updateCurrentTrack();
                 $(".fa-pause").css('display', '');
                 $(".fa-play").css('display', 'none');

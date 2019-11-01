@@ -1,9 +1,12 @@
 import soco
+from soco.music_services import MusicService
 from spotify import (
     get_auth,
     get_sonos_playlist_names,
     ripple_merge_playlists,
+    ripple_merge_pt_2,
     blend_playlists,
+    blend_merge_pt_2,
     load_tree,
 )
 from os.path import join, dirname, realpath
@@ -91,28 +94,46 @@ def get_playlists():
 @app.route("/api/upcoming/<p1>/<p2>/<method>")
 def upcoming(p1, p2, method):
     if method == "ripple":
-        return jsonify(
-            ripple_merge_playlists(
+        track_ids = ripple_merge_playlists(
                 g["auth"],
                 "SONOS_" + p1,
                 "SONOS_" + p2,
                 g["matching_data"],
-                num_tracks=10,
+                num_tracks=30,
             )
-        )
+        
+        update_queue(track_ids)
+        return jsonify(ripple_merge_pt_2(
+                g["auth"],
+                track_ids,
+                g["matching_data"]
+                ))
 
     if method == "blend":
-        return jsonify(
-            blend_playlists(
+        json = blend_playlists(
                 g["auth"],
                 "SONOS_" + p1,
                 "SONOS_" + p2,
                 g["matching_data"],
-                num_tracks=10,
+                num_tracks=30,
             )
-        )
+        update_queue(json[0]["track_ids"])
+        return jsonify(blend_merge_pt_2(g["auth"], json[0]["track_ids"], json[0]["matching_data"], json[0]["indexes"]))
 
     return "ERROR: method must be one of ['ripple', 'shuffle']"
+
+def update_queue(track_ids):
+    # print(track_ids)
+    full_sonos_uri = "x-sonos-spotify:spotify%3atrack%3a"
+    uri_end = "?sid=12flags=8224&sn=1"
+    for zone in g["zones"]:
+        # print(g["zones"][zone].coordinator.get_current_transport_info())
+        if (g["zones"][zone].coordinator.get_current_transport_info()['current_transport_state']):
+            g["zones"][zone].coordinator.clear_queue()
+            for uri in track_ids:
+                sonos_uri = full_sonos_uri + uri + uri_end
+                # print(sonos_uri)
+                g["zones"][zone].coordinator.add_uri_to_queue(sonos_uri)
 
 
 if __name__ == "__main__":
