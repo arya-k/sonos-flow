@@ -11,5 +11,7 @@ Our final submission was [a 5 minute video](https://www.youtube.com/watch?v=0an7
 This repository acted as a bit of a playground for theoretical approaches to our challenge.
 
 `control/` - Testing local-only SoCo implementation to control Sonos speakers.
+
 `demo/` - flask server, which runs a bootstrap frontend built with JQuery and Bootstrap.
+
 `ui_testing/` - playing around with Bootstrap, setting up a template for a web-based demo.
