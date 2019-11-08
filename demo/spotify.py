@@ -1,14 +1,3 @@
-"""
-
-Meant to emulate actually using spotify live.
-
-alfredherbstb@gmail.com -> 3b2focyvbu47d2d1m9o6zueet
-
-TODO: better caching to files.
-TODO: just use numpy
-
-"""
-
 import pickle
 import spotipy
 import numpy as np
@@ -20,7 +9,7 @@ from scipy import spatial
 # CONSTANTS #
 #############
 
-USER_ID = "3b2focyvbu47d2d1m9o6zueet"
+USER_ID = "<FILL IN USER ID HERE>"
 
 csv_metadata_headers = ["artist_name", "track_id", "track_name"]
 
@@ -120,10 +109,10 @@ def get_auth():
     # client_credentials_manager = SpotifyClientCredentials()
     scope = "playlist-modify-public"
     token = util.prompt_for_user_token(
-        "alfredherbstb@gmail.com",
+        "<YOUR USERNAME>",
         scope,
-        client_id="c9a7df5e7a4145ddb30e2631e2ccb046",
-        client_secret="5cfed1bf5fd845f0bf75685440a05245",
+        client_id="<YOUR CLIENT ID>",
+        client_secret="<YOUR CLIENT SECRET>",
         redirect_uri="http://localhost/",
     )
     return spotipy.Spotify(auth=token)
@@ -298,8 +287,3 @@ if __name__ == "__main__":
     gen_data_files(csv_metadata_headers, csv_vector_headers)
 
     matching_data = load_tree()
-    print("done"
-        # get_tracks_near_playlist(
-        #     sp, "SONOS_EDM", "SONOS_Piano", matching_data, num_tracks=10
-        # )
-    )
